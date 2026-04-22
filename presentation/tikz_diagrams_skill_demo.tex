@@ -11,6 +11,7 @@
 \usepackage{adjustbox}
 \usepackage{xcolor}
 \usepackage{tikz}
+\usepackage{animate}
 \hypersetup{
   colorlinks=true,
   linkcolor=blue,
@@ -86,6 +87,22 @@
   \vspace{0.2cm}
   \small
   GIF preview: \href{run:assets/multiplier_animation.gif}{open local animation preview}
+\end{frame}
+
+\begin{frame}{PDF-Native Animation: Multiplier Effect}
+  \centering
+  \animategraphics[
+    controls,
+    loop,
+    autoplay,
+    width=\linewidth,
+    height=0.70\textheight,
+    keepaspectratio
+  ]{6}{assets/multiplier_frames/frame-}{01}{44}
+
+  \vspace{0.15cm}
+  \small
+  This uses \texttt{animate} plus PNG frames, so the animation is embedded in the PDF.
 \end{frame}
 
 \begin{frame}{Lesson: Trace and Clean Version Can Coexist}

@@ -29,10 +29,12 @@ outputs/
 *.mp4
 !presentation/assets/*.png
 !presentation/assets/*.gif
+!presentation/assets/**/
+!presentation/assets/**/*.png
+!presentation/assets/**/*.gif
 
 # Local environment and secrets
 .env
 .env.*
 *.key
 *.pem
-

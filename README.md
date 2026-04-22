@@ -8,6 +8,8 @@ The canonical skill lives at:
 skills/tikz-diagrams/SKILL.md
 ```
 
+Install the entire `skills/tikz-diagrams/` folder, not only `SKILL.md`. The folder contains the scripts, references, fixtures, and reusable templates that make the workflow deterministic.
+
 ## What It Does
 
 - Creates standalone TikZ diagrams for teaching, research, and compact layouts.
@@ -79,6 +81,17 @@ rsync -a /tmp/tikz-diagrams-skill/skills/tikz-diagrams/ ~/.codex/skills/tikz-dia
 ```
 
 Restart Codex after installing.
+
+After installation, the user's global skill should contain:
+
+```text
+~/.codex/skills/tikz-diagrams/
+├── SKILL.md
+├── references/
+├── scripts/
+├── templates/
+└── tests/
+```
 
 ### Claude Code
 
@@ -179,4 +192,3 @@ For a real diagram, create a standalone `.tex`, then run:
 ```bash
 python3 "$SKILL_DIR/scripts/compile_render.py" path/to/diagram.tex --visual-check --visual-mode teaching
 ```
-
