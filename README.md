@@ -59,6 +59,113 @@ export SKILL_DIR="$PWD/skills/tikz-diagrams"
 python3 "$SKILL_DIR/scripts/check_tikz_safety.py" "$SKILL_DIR/templates/standalone.tex"
 ```
 
+## Prompt Cookbook
+
+Use these as starting prompts after installing the skill. Replace the topic, source file, and output folder with your own.
+
+### Teaching Figure
+
+```text
+Use the tikz-diagrams skill to create a standalone teaching-mode TikZ diagram for a lecture slide explaining [TOPIC].
+
+Requirements:
+- choose the most appropriate diagram family
+- keep labels short and put explanation outside the image
+- compile to PDF
+- render to PNG
+- run static TikZ safety checks
+- run rendered visual QA in teaching mode
+- visually inspect for overlap, clipping, title-band collisions, crowded arrows, and poor slide fit
+- include a short QA note explaining the diagram family, checks run, and any limitations
+```
+
+### Research Figure
+
+```text
+Use the tikz-diagrams skill to create a standalone research-mode TikZ figure for [PAPER / SEMINAR TOPIC].
+
+Requirements:
+- use direct labels and compact annotation
+- avoid large explainer boxes inside the figure
+- if the figure has curves, thresholds, estimates, payoffs, or model-implied geometry, run the math/diagram logic gate
+- classify the math review as exact, schematic, needs_source, or failed
+- compile to PDF, render to PNG, run visual QA, and write a QA note
+```
+
+### Animation
+
+```text
+Use the tikz-diagrams skill to create an animate.sty animation for [MECHANISM].
+
+Before rendering:
+- explain what changes over time
+- decide whether motion should be discrete, continuous, or mixed
+- decide whether smooth transitions are worth the render time
+- choose frame pacing so dense states are readable
+
+Outputs:
+- interactive animation .tex and .pdf
+- first-frame PNG
+- frame deck or preview source
+- GIF preview
+- contact sheet of key frames
+- QA note covering source pattern, pacing, checks, and repairs
+```
+
+### Screenshot Or Paper Figure
+
+```text
+Use the tikz-diagrams skill to recreate and improve this source figure: [PATH OR URL].
+
+Requirements:
+- summarize the source context before drawing
+- identify which parts are data/model logic and which are visual style
+- preserve the figure's substantive meaning, not every cosmetic detail
+- run visual QA and, if model-dependent, the math/diagram logic gate
+- produce a clean TikZ output plus a short note comparing source and output
+```
+
+### Hand-Drawn Or Whiteboard Style
+
+```text
+Use the tikz-diagrams skill to turn this hand-drawn sketch into a hand-drawn-style TikZ figure or animation: [IMAGE PATH].
+
+Requirements:
+- preserve the classroom-board feel only where it helps communication
+- make axes, labels, arrows, and key comparisons readable
+- keep caption-style explanation outside the image
+- if the sketch implies math or curve logic, either mark the output schematic or compute the geometry exactly
+- render a PNG or GIF preview and include a QA note
+```
+
+### Precise Iteration
+
+Use precise iteration prompts when the first render is close but not final. Name the exact artifact and the exact thing to change.
+
+```text
+Use the tikz-diagrams skill to revise [FIGURE.tex].
+
+Do not redesign the whole figure. Patch only these issues:
+- move [LABEL] 4mm left and 2mm up
+- shorten [ANNOTATION] to "[NEW TEXT]"
+- keep the axis limits, curve geometry, and color palette unchanged
+- rerun static safety, compile/render, and visual QA
+- save as [FIGURE_v02.tex/.pdf/.png] so the old render is not overwritten
+- update the QA note with what changed
+```
+
+```text
+Use the tikz-diagrams skill to make an iteration contact sheet for [FIGURE_v01.png] and [FIGURE_v02.png].
+
+Compare them for:
+- overlap or clipping
+- title-band safety
+- whether the main message is clearer
+- whether any math/curve/payoff/threshold logic changed unintentionally
+
+Recommend keep, simplify, split, or reject.
+```
+
 ## What This Skill Does
 
 This skill helps an AI agent behave less like a one-off TikZ snippet writer and more like a careful figure assistant.
