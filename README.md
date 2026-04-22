@@ -12,6 +12,53 @@ Install the whole folder, not only `SKILL.md`. The folder contains the scripts, 
 
 > Note: Some showcase inputs are screenshots or thumbnail crops from external sources used to demonstrate the workflow. Replace them with licensed/open examples before making a public showcase.
 
+## Quickstart: Install And Use
+
+Repository URL:
+
+```text
+https://github.com/Patrick-Healy/tikz-diagrams-skill
+```
+
+### Codex
+
+```text
+$skill-installer install https://github.com/Patrick-Healy/tikz-diagrams-skill/tree/main/skills/tikz-diagrams
+```
+
+Manual install:
+
+```bash
+mkdir -p ~/.codex/skills
+git clone https://github.com/Patrick-Healy/tikz-diagrams-skill.git /tmp/tikz-diagrams-skill
+rsync -a /tmp/tikz-diagrams-skill/skills/tikz-diagrams/ ~/.codex/skills/tikz-diagrams/
+```
+
+### Claude Code
+
+```bash
+mkdir -p ~/.claude/skills
+git clone https://github.com/Patrick-Healy/tikz-diagrams-skill.git /tmp/tikz-diagrams-skill
+rsync -a /tmp/tikz-diagrams-skill/skills/tikz-diagrams/ ~/.claude/skills/tikz-diagrams/
+```
+
+Restart the agent after installing. For rendering workflows, make sure TeX, Poppler, Python packages, `ffmpeg`, and ImageMagick are installed; see [Dependencies](#dependencies).
+
+### First Prompt To Try
+
+```text
+Use the tikz-diagrams skill to create a standalone teaching-mode TikZ diagram of parallel trends in difference-in-differences. Compile it, render it, run visual QA, and include a QA note.
+```
+
+### Local Smoke Test
+
+After cloning the repo:
+
+```bash
+export SKILL_DIR="$PWD/skills/tikz-diagrams"
+python3 "$SKILL_DIR/scripts/check_tikz_safety.py" "$SKILL_DIR/templates/standalone.tex"
+```
+
 ## What This Skill Does
 
 This skill helps an AI agent behave less like a one-off TikZ snippet writer and more like a careful figure assistant.
