@@ -209,7 +209,9 @@ Use this path when a paper figure is the source of truth and the agent must pres
 |---|---|
 | <img src="presentation/assets/nber_input.png" alt="NBER 34817 Figure 3 screenshot" width="380"> | <img src="presentation/assets/nber_figure3_phase_preview_v01.gif" alt="Animated phase-diagram preview" width="380"><br><br><img src="presentation/assets/nber_animation_contact.png" alt="Animated phase-diagram contact sheet" width="430"> |
 
-Source context: NBER Working Paper 34817, Figure 3, "International Currency Dominance." The figure is a phase diagram for strategic complementarities in accepting foreign currency: arrows show net incentives, dashed loci show cost thresholds, and colored regions mark monetary regimes.
+Input request: use Figure 3 from NBER Working Paper 34817, "International Currency Dominance," at [https://www.nber.org/system/files/working_papers/w34817/w34817.pdf](https://www.nber.org/system/files/working_papers/w34817/w34817.pdf). The agent was asked to extract a screenshot of the figure, read the surrounding paper context, explain what the diagram shows, then plan and animate it.
+
+Source context: Figure 3 is a phase diagram for strategic complementarities in accepting foreign currency. Arrows show net incentives, dashed loci show cost thresholds, and colored regions mark monetary regimes.
 
 **What to notice:** the output includes both a GIF preview and a contact sheet. For animations, playback and the frame sequence are part of the figure and must be inspected.
 
