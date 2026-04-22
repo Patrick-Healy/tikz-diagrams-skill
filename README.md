@@ -99,11 +99,17 @@ Use this path when a rough drawing encodes timing. The useful animation is the d
 |---|---|
 | <img src="presentation/assets/j_curve_source_share.png" alt="J-curve sketch input" width="220"> | <img src="presentation/assets/j_curve_animation.gif" alt="Animated J-curve delayed adjustment" width="300"> |
 
-Input context: a current-account J-curve sketch. After a devaluation or policy event, the current account initially deteriorates below baseline before recovering and improving over time.
+Input context: a TikTok-style current-account J-curve sketch. After a devaluation or policy event, the current account initially deteriorates below baseline before recovering and improving over time.
 
 **What to notice:** the animation reveals the event marker, trough, recovery, and final improvement. Longer interpretation belongs in surrounding text or a QA note.
 
 Checks to expect: delayed-adjustment path, event timing, baseline, trough, recovery, externalized caption.
+
+Prompt pattern:
+
+```text
+Use the tikz-diagrams skill to turn this hand-drawn J-curve sketch into a hand-drawn-style animated TikZ figure. Preserve the rough classroom-board feel, but make the axes, event marker, trough, recovery path, and final improvement readable. Render a GIF preview and include a QA note.
+```
 
 ### 6. Rough Sketch To Exact AD-AS Animation
 
@@ -118,6 +124,12 @@ Input context: an AD-AS multiplier-effect sketch with PL and real GDP axes, SRAS
 **What to notice:** this output uses the math-logic gate. SRAS and AD schedules are declared as equations, intersections are computed, and the output-change bracket attaches to calculated equilibrium output levels.
 
 Checks to expect: `math_logic_review: exact`, declared equations, computed intersections, static safety, PDF compile, GIF preview.
+
+Prompt pattern:
+
+```text
+Use the tikz-diagrams skill to animate this hand-drawn-style AD-AS multiplier sketch. Keep the classroom-sketch look if useful, but run the math/diagram logic gate: either mark the result schematic or compute the AD/SRAS intersections from declared equations.
+```
 
 ### 7. TeXample Animation Patterns Adapted By Department
 
