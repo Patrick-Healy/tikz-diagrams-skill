@@ -10,8 +10,6 @@ skills/tikz-diagrams/
 
 Install the whole folder, not only `SKILL.md`. The folder contains the scripts, references, fixtures, and reusable templates that make the workflow reliable.
 
-> Note: Some showcase inputs are screenshots or thumbnail crops from external sources used to demonstrate the workflow. Replace them with licensed/open examples before making a public showcase.
-
 ## Quickstart: Install And Use
 
 Repository URL:
@@ -46,6 +44,8 @@ Restart the agent after installing. For rendering workflows, make sure TeX, Popp
 
 ### First Prompt To Try
 
+After installing, start a new agent session and ask it to use the skill:
+
 ```text
 Use the tikz-diagrams skill to create a standalone teaching-mode TikZ diagram of parallel trends in difference-in-differences. Compile it, render it, run visual QA, and include a QA note.
 ```
@@ -59,112 +59,16 @@ export SKILL_DIR="$PWD/skills/tikz-diagrams"
 python3 "$SKILL_DIR/scripts/check_tikz_safety.py" "$SKILL_DIR/templates/standalone.tex"
 ```
 
-## Prompt Cookbook
+## Prompt Menu
 
-Use these as starting prompts after installing the skill. Replace the topic, source file, and output folder with your own.
+Use these short forms once the skill is installed. Full copy-paste prompts are in [Prompt Cookbook](#prompt-cookbook).
 
-### Teaching Figure
-
-```text
-Use the tikz-diagrams skill to create a standalone teaching-mode TikZ diagram for a lecture slide explaining [TOPIC].
-
-Requirements:
-- choose the most appropriate diagram family
-- keep labels short and put explanation outside the image
-- compile to PDF
-- render to PNG
-- run static TikZ safety checks
-- run rendered visual QA in teaching mode
-- visually inspect for overlap, clipping, title-band collisions, crowded arrows, and poor slide fit
-- include a short QA note explaining the diagram family, checks run, and any limitations
-```
-
-### Research Figure
-
-```text
-Use the tikz-diagrams skill to create a standalone research-mode TikZ figure for [PAPER / SEMINAR TOPIC].
-
-Requirements:
-- use direct labels and compact annotation
-- avoid large explainer boxes inside the figure
-- if the figure has curves, thresholds, estimates, payoffs, or model-implied geometry, run the math/diagram logic gate
-- classify the math review as exact, schematic, needs_source, or failed
-- compile to PDF, render to PNG, run visual QA, and write a QA note
-```
-
-### Animation
-
-```text
-Use the tikz-diagrams skill to create an animate.sty animation for [MECHANISM].
-
-Before rendering:
-- explain what changes over time
-- decide whether motion should be discrete, continuous, or mixed
-- decide whether smooth transitions are worth the render time
-- choose frame pacing so dense states are readable
-
-Outputs:
-- interactive animation .tex and .pdf
-- first-frame PNG
-- frame deck or preview source
-- GIF preview
-- contact sheet of key frames
-- QA note covering source pattern, pacing, checks, and repairs
-```
-
-### Screenshot Or Paper Figure
-
-```text
-Use the tikz-diagrams skill to recreate and improve this source figure: [PATH OR URL].
-
-Requirements:
-- summarize the source context before drawing
-- identify which parts are data/model logic and which are visual style
-- preserve the figure's substantive meaning, not every cosmetic detail
-- run visual QA and, if model-dependent, the math/diagram logic gate
-- produce a clean TikZ output plus a short note comparing source and output
-```
-
-### Hand-Drawn Or Whiteboard Style
-
-```text
-Use the tikz-diagrams skill to turn this hand-drawn sketch into a hand-drawn-style TikZ figure or animation: [IMAGE PATH].
-
-Requirements:
-- preserve the classroom-board feel only where it helps communication
-- make axes, labels, arrows, and key comparisons readable
-- keep caption-style explanation outside the image
-- if the sketch implies math or curve logic, either mark the output schematic or compute the geometry exactly
-- render a PNG or GIF preview and include a QA note
-```
-
-### Precise Iteration
-
-Use precise iteration prompts when the first render is close but not final. Name the exact artifact and the exact thing to change.
-
-```text
-Use the tikz-diagrams skill to revise [FIGURE.tex].
-
-Do not redesign the whole figure. Patch only these issues:
-- move [LABEL] 4mm left and 2mm up
-- shorten [ANNOTATION] to "[NEW TEXT]"
-- keep the axis limits, curve geometry, and color palette unchanged
-- rerun static safety, compile/render, and visual QA
-- save as [FIGURE_v02.tex/.pdf/.png] so the old render is not overwritten
-- update the QA note with what changed
-```
-
-```text
-Use the tikz-diagrams skill to make an iteration contact sheet for [FIGURE_v01.png] and [FIGURE_v02.png].
-
-Compare them for:
-- overlap or clipping
-- title-band safety
-- whether the main message is clearer
-- whether any math/curve/payoff/threshold logic changed unintentionally
-
-Recommend keep, simplify, split, or reject.
-```
+- **Teaching slide**: `Use the tikz-diagrams skill to create a standalone teaching-mode TikZ diagram for [TOPIC]. Compile, render, run visual QA, and include a QA note.`
+- **Research figure**: `Use the tikz-diagrams skill to create a standalone research-mode TikZ figure for [TOPIC]. Use direct labels, run visual QA, and run the math/diagram logic gate if geometry or estimates matter.`
+- **Animation**: `Use the tikz-diagrams skill to create an animate.sty animation for [MECHANISM]. Decide motion form and pacing before rendering; produce a GIF preview and contact sheet.`
+- **Screenshot or paper figure**: `Use the tikz-diagrams skill to recreate and improve this source figure: [PATH OR URL]. Preserve the substantive meaning and document source context.`
+- **Hand-drawn style**: `Use the tikz-diagrams skill to turn this hand-drawn sketch into a readable hand-drawn-style TikZ figure or animation: [IMAGE PATH].`
+- **Precise iteration**: `Use the tikz-diagrams skill to revise [FIGURE.tex]. Patch only [EXACT CHANGES], save as v02, rerun checks, and update the QA note.`
 
 ## What This Skill Does
 
@@ -201,9 +105,11 @@ Use this path when there is no visual input. The prompt itself is the input arti
 
 **What to notice:** the output focuses on the untreated counterfactual trend and post-treatment comparison, rather than crowding the slide with caption prose.
 
+Skill decision: `teaching` mode | family: `axis/curve` | math review: `schematic` | outputs: PDF, PNG, visual QA JSON, QA note.
+
 Checks to expect: `teaching` mode, standalone `.tex`, compiled PDF, rendered PNG, visual QA, QA note.
 
-### 2. Screenshot To Paced Game-Tree Animation
+### 2. Static Game Tree To Paced Animated Build
 
 Use this path when a static game tree is dense. The animation should reveal the reading order instead of adding more labels.
 
@@ -213,9 +119,11 @@ Use this path when a static game tree is dense. The animation should reveal the 
 
 **What to notice:** the animation builds Nature, Sender choices, Receiver information sets, Receiver actions, and terminal payoffs in sequence. Dense states need pacing; a viewer needs time to read payoffs and information sets.
 
+Skill decision: `teaching` animation | family: `tree/branch` | logic review: payoff and information-set check | outputs: GIF preview and contact sheet.
+
 Checks to expect: tree grammar, chance probabilities, information sets, payoff labels, frame sequence, pacing gate, GIF preview.
 
-This repository version uses a local screenshot-context image preserving the game-tree geometry used for the test; replace it with the raw uploaded screenshot if publishing a public-facing example.
+This row uses the reconstructed static game-tree context image because the original uploaded screenshot is not part of the repository. The workflow is the same: source or static tree context, then paced animation.
 
 ### 3. Paper Figure To Animated Research Figure
 
@@ -228,6 +136,8 @@ Use this path when a paper figure is the source of truth and the agent must pres
 Source context: NBER Working Paper 34817, Figure 3, "International Currency Dominance." The figure is a phase diagram for strategic complementarities in accepting foreign currency: arrows show net incentives, dashed loci show cost thresholds, and colored regions mark monetary regimes.
 
 **What to notice:** the output includes both a GIF preview and a contact sheet. For animations, playback and the frame sequence are part of the figure and must be inspected.
+
+Skill decision: `research` animation | family: `threshold/phase transition` | source context: paper figure | outputs: GIF preview and animation contact sheet.
 
 Checks to expect: source context in QA note, figure family chosen, animation frames inspected, rendered visual QA reviewed.
 
@@ -243,6 +153,8 @@ Source context: NBER Working Paper 35085, "Le Bureau des Legendes: A Dynamic The
 
 **What to notice:** the corridor and thresholds stay fixed, the path is revealed smoothly, and the exit marker appears only after the crossing condition is true.
 
+Skill decision: `research` animation | family: `threshold/corridor trajectory` | math review: threshold logic | outputs: GIF preview.
+
 Checks to expect: threshold logic, region inequalities, fixed axes, frame truth, exit marker timing.
 
 ### 5. Rough Sketch To J-Curve Animation
@@ -256,6 +168,8 @@ Use this path when a rough drawing encodes timing. The useful animation is the d
 Input context: a TikTok-style current-account J-curve sketch. After a devaluation or policy event, the current account initially deteriorates below baseline before recovering and improving over time.
 
 **What to notice:** the animation reveals the event marker, trough, recovery, and final improvement. Longer interpretation belongs in surrounding text or a QA note.
+
+Skill decision: `teaching` animation | family: `delayed-adjustment path / J-curve` | math review: `schematic` | outputs: hand-drawn-style GIF preview.
 
 Checks to expect: delayed-adjustment path, event timing, baseline, trough, recovery, externalized caption.
 
@@ -277,6 +191,8 @@ Input context: an AD-AS multiplier-effect sketch with PL and real GDP axes, SRAS
 
 **What to notice:** this output uses the math-logic gate. SRAS and AD schedules are declared as equations, intersections are computed, and the output-change bracket attaches to calculated equilibrium output levels.
 
+Skill decision: `teaching` animation | family: `axis/curve` | math review: `exact` | outputs: GIF preview and QA note.
+
 Checks to expect: `math_logic_review: exact`, declared equations, computed intersections, static safety, PDF compile, GIF preview.
 
 Prompt pattern:
@@ -289,9 +205,9 @@ Use the tikz-diagrams skill to animate this hand-drawn-style AD-AS multiplier sk
 
 Use this path when an agent needs to adapt a known animation idea to a new teaching domain.
 
-| Pattern family | Department outputs |
+| Pattern family | Summary output |
 |---|---|
-| <img src="presentation/assets/department_animation_contact_sheet_v01.png" alt="Department animation contact sheet" width="430"> | Economics<br><img src="presentation/assets/econ_consumer_surplus_preview_v01.gif" alt="Consumer surplus animation" width="300"><br><br>Econometrics<br><img src="presentation/assets/metrics_convolution_overlap_preview_v01.gif" alt="Convolution overlap animation" width="300"><br><br>Finance<br><img src="presentation/assets/finance_margin_buffer_preview_v01.gif" alt="Margin buffer animation" width="300"><br><br>Marketing<br><img src="presentation/assets/marketing_cohort_migration_preview_v01.gif" alt="Cohort migration animation" width="300"><br><br>Operations<br><img src="presentation/assets/ops_eoq_cost_sweep_preview_v01.gif" alt="EOQ cost sweep animation" width="300"> |
+| <img src="presentation/assets/department_animation_contact_sheet_v01.png" alt="Department animation contact sheet" width="430"> | Five department variants were generated from animation patterns and reviewed together as a contact sheet. |
 
 Source patterns: TeXample animated definite integral, lower/upper Riemann sums, convolution, Towers of Hanoi, projectile, and Andler optimal lot-size.
 
@@ -303,7 +219,95 @@ Source patterns: TeXample animated definite integral, lower/upper Riemann sums, 
 - Marketing: cohort migration across states.
 - Operations: EOQ tradeoff sweep across order quantity.
 
+Skill decision: animation pattern transfer | family: multiple | review: department fit and contact-sheet inspection | outputs: five GIF previews and a contact sheet.
+
 Checks to expect: pattern adaptation, department fit, `animate.sty` PDFs, GIF previews, contact-sheet review.
+
+<details>
+<summary>See the five department GIF previews</summary>
+
+Economics<br>
+<img src="presentation/assets/econ_consumer_surplus_preview_v01.gif" alt="Consumer surplus animation" width="300">
+
+Econometrics<br>
+<img src="presentation/assets/metrics_convolution_overlap_preview_v01.gif" alt="Convolution overlap animation" width="300">
+
+Finance<br>
+<img src="presentation/assets/finance_margin_buffer_preview_v01.gif" alt="Margin buffer animation" width="300">
+
+Marketing<br>
+<img src="presentation/assets/marketing_cohort_migration_preview_v01.gif" alt="Cohort migration animation" width="300">
+
+Operations<br>
+<img src="presentation/assets/ops_eoq_cost_sweep_preview_v01.gif" alt="EOQ cost sweep animation" width="300">
+
+</details>
+
+## Prompt Cookbook
+
+<details>
+<summary>Copy-paste detailed prompts</summary>
+
+### Teaching Figure
+
+```text
+Use the tikz-diagrams skill to create a standalone teaching-mode TikZ diagram for [TOPIC].
+Audience: [COURSE / SLIDE CONTEXT].
+The diagram should teach one main idea: [MAIN IDEA].
+Compile to PDF, render to PNG, run static safety and rendered visual QA, inspect the PNG manually, and write a short QA note.
+Keep caption-style prose outside the rendered image.
+```
+
+### Research Figure
+
+```text
+Use the tikz-diagrams skill to create a standalone research-mode TikZ figure for [TOPIC].
+Use direct labels and compact annotations suitable for a seminar or working paper.
+Before drawing, run the math/diagram logic planning gate: identify variables, equations or constraints, expected ordering, and whether the figure is exact or schematic.
+Compile, render, run visual QA, and record math_logic_review in the QA note.
+```
+
+### Animation
+
+```text
+Use the tikz-diagrams skill to create an animate.sty animation for [MECHANISM].
+First decide whether animation is needed, what changes over time, whether motion should be discrete or smooth, and what pacing each frame needs.
+Ask before using slow smooth transitions if they materially increase render time.
+Produce the interactive PDF, a GIF preview, a key-frame contact sheet, and a QA note.
+```
+
+### Screenshot Or Paper Figure
+
+```text
+Use the tikz-diagrams skill to recreate and improve this source figure: [PATH OR URL].
+Summarize the source context before drawing.
+Preserve the substantive meaning, but improve readability where appropriate.
+If geometry, thresholds, curves, payoffs, or estimates matter, run the math/diagram logic gate and say whether the output is exact or schematic.
+Compile, render, run visual QA, and include the source context in the QA note.
+```
+
+### Hand-Drawn Or Whiteboard Style
+
+```text
+Use the tikz-diagrams skill to turn this hand-drawn sketch into a readable hand-drawn-style TikZ figure or animation: [IMAGE PATH].
+Preserve the useful classroom feel, but make axes, labels, key points, and arrows readable.
+Do not put long explanatory captions inside the image.
+Run visual QA and inspect the output for clipping, overlap, and whether the hand-drawn style still communicates the concept.
+```
+
+### Precise Iteration
+
+```text
+Use the tikz-diagrams skill to revise [FIGURE.tex].
+Patch only these changes:
+1. [EXACT CHANGE]
+2. [EXACT CHANGE]
+3. [EXACT CHANGE]
+Save as v02, rerun static safety, compile/render, rerun visual QA, and update the QA note with what changed.
+Do not redesign unrelated parts of the figure.
+```
+
+</details>
 
 ## Core Workflow
 
@@ -512,9 +516,9 @@ python -m pip install Pillow PyMuPDF
 
 Poppler on Windows is easiest through MSYS2, Chocolatey, or a trusted Poppler build. Verify `pdftoppm` is on `PATH`.
 
-## Quick Test
+## Additional Verification Commands
 
-After cloning:
+After cloning, the fastest local check is:
 
 ```bash
 export SKILL_DIR="$PWD/skills/tikz-diagrams"
@@ -532,6 +536,15 @@ For an animation frame deck:
 ```bash
 python3 "$SKILL_DIR/scripts/render_animation_preview.py" path/to/frames.pdf --fps 8 --key-frames 1,10,20
 ```
+
+## Source Provenance
+
+The showcase uses a mixture of written prompts, local test outputs, paper-figure screenshots, and rough sketch screenshots to demonstrate the workflow.
+
+- The NBER examples are source-context demonstrations. Cite and link the underlying paper when using them in public teaching or research material.
+- The rough J-curve and AD-AS sketch inputs are classroom-sketch style examples. Replace third-party thumbnails or screenshots with licensed, original, or course-owned images before public promotion.
+- The game-tree row uses a reconstructed context image because the original uploaded screenshot is not stored in this repository.
+- The generated TikZ outputs, GIF previews, contact sheets, and QA notes are produced by the skill workflow and are included to show what the agent should create and inspect.
 
 ## Sources Checked For Install Guidance
 
