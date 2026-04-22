@@ -243,11 +243,11 @@ Use this path when a rough drawing encodes timing. The useful animation is the d
 
 Input context: a TikTok-style current-account J-curve sketch. After depreciation, the current account can deteriorate immediately because import values rise before quantities adjust. Over time, export and import quantities respond; the long-run path improves if the elasticity condition is strong enough.
 
-**What to notice:** the animation now puts the depreciation event before the deterioration, then reveals the trough and quantity-adjustment recovery. Longer interpretation belongs in surrounding text or a QA note.
+**What to notice:** the animation keeps the hand-drawn classroom style, puts the depreciation mark before the deterioration, places the dashed guide at the trough, and then reveals quantity-adjustment recovery. Longer interpretation belongs in surrounding text or a QA note.
 
 Skill decision: `teaching` animation | family: `delayed-adjustment path / J-curve` | math review: `schematic` | outputs: hand-drawn-style GIF preview.
 
-Checks to expect: delayed-adjustment path, event timing, immediate price-effect deterioration, trough after the event, gradual recovery, externalized caption.
+Checks to expect: delayed-adjustment path, event timing, immediate price-effect deterioration, dashed guide aligned with the trough, gradual recovery, externalized caption.
 
 Prompt pattern:
 
