@@ -1,0 +1,6 @@
+---
+description: Use when editing or generating TikZ/PGF diagrams and animations.
+alwaysApply: false
+---
+
+Follow `skills/tikz-diagrams/SKILL.md` for TikZ diagrams, rendered visual QA, contact sheets, and animation previews. Prefer bundled scripts over ad hoc one-off commands.

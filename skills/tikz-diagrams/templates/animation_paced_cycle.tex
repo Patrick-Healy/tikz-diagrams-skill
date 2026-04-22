@@ -1,0 +1,96 @@
+\documentclass[border=5pt]{standalone}
+\usepackage{tikz}
+\usepackage{animate}
+\usetikzlibrary{arrows.meta,calc,decorations.markings}
+
+% Reusable template for teaching animations where a state moves around a
+% stable cycle: business cycle, adoption cycle, inventory cycle, risk cycle.
+% Keep contextual labels fixed; animate only the state marker, active arc, and
+% one concise mechanism cue. Repeat semantic states when viewers need longer.
+
+\definecolor{accent}{RGB}{188,137,0}
+\definecolor{ink}{RGB}{32,38,46}
+\definecolor{muted}{RGB}{105,112,122}
+\definecolor{grid}{RGB}{215,220,226}
+
+\newcommand{\CycleBase}{%
+  \draw[->, line width=0.65pt, ink] (-3.8,-3.35) -- (3.9,-3.35)
+    node[below left=2pt, font=\scriptsize] {$x_t$};
+  \draw[->, line width=0.65pt, ink] (-3.8,-3.35) -- (-3.8,3.55)
+    node[below right=2pt, font=\scriptsize] {$y_t$};
+  \node[font=\scriptsize, align=center] at (0,-3.72) {horizontal axis label};
+  \node[font=\scriptsize, rotate=90, align=center, anchor=center] at (-4.15,0) {vertical axis label};
+
+  \draw[line width=0.55pt, grid] (-3.55,0) -- (3.55,0);
+  \draw[line width=0.55pt, grid] (0,-3.10) -- (0,3.10);
+  \draw[line width=0.85pt, ink] (0,0) circle[radius=2.55];
+
+  \node[font=\scriptsize, align=center] at (-2.45,-2.85) {(1)\\State A};
+  \node[font=\scriptsize, align=center] at (2.45,-2.85) {(2)\\State B};
+  \node[font=\scriptsize, align=center] at (2.45,2.85) {(3)\\State C};
+  \node[font=\scriptsize, align=center] at (-2.45,2.85) {(4)\\State D};
+}
+
+\newcommand{\CycleMarker}[2]{%
+  \pgfmathsetmacro{\ang}{#1}
+  \coordinate (state) at ({2.55*cos(\ang)},{2.55*sin(\ang)});
+  \draw[accent, line width=1.25pt, -{Stealth[length=4pt]}]
+    ({2.55*cos(\ang-24)},{2.55*sin(\ang-24)})
+    arc[start angle=\ang-24, end angle=\ang+18, radius=2.55];
+  \fill[accent] (state) circle[radius=3.4pt];
+  \node[font=\scriptsize\bfseries, text=accent, align=center, fill=white, inner sep=1.5pt]
+    at ($(state)+(0,0.34)$) {#2};
+}
+
+\newcommand{\CycleFrame}[1]{%
+\begin{tikzpicture}[
+  font=\sffamily,
+  >=Stealth,
+  ink/.style={draw=ink},
+  cue/.style={font=\scriptsize, align=center, text=ink},
+  faded/.style={text=muted}
+]
+  \CycleBase
+  % Replace the ifcase entries with domain-specific angles and cue text.
+  \ifcase#1
+    \CycleMarker{225}{State A}
+  \or
+    \CycleMarker{255}{transition}
+  \or
+    \CycleMarker{315}{State B}
+  \or
+    \CycleMarker{15}{transition}
+  \or
+    \CycleMarker{45}{State C}
+  \or
+    \CycleMarker{105}{transition}
+  \or
+    \CycleMarker{135}{State D}
+  \else
+    \CycleMarker{195}{transition}
+  \fi
+\end{tikzpicture}%
+}
+
+\newcommand{\PacedCycleFrame}[1]{%
+  \ifcase#1
+    \CycleFrame{0}%
+  \or \CycleFrame{0}%
+  \or \CycleFrame{1}%
+  \or \CycleFrame{2}%
+  \or \CycleFrame{2}%
+  \or \CycleFrame{3}%
+  \or \CycleFrame{4}%
+  \or \CycleFrame{4}%
+  \or \CycleFrame{5}%
+  \or \CycleFrame{6}%
+  \or \CycleFrame{6}%
+  \else \CycleFrame{7}%
+  \fi
+}
+
+\begin{document}
+\begin{animateinline}[poster=first,controls,loop]{2}
+\multiframe{12}{i=0+1}{\PacedCycleFrame{\i}}
+\end{animateinline}
+\end{document}

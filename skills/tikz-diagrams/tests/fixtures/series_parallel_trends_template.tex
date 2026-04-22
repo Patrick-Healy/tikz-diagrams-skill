@@ -1,0 +1,48 @@
+\documentclass[border=6pt]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,fit,backgrounds}
+\definecolor{mbblue}{HTML}{1F5A85}
+\definecolor{mbteal}{HTML}{287C72}
+\definecolor{mbgold}{HTML}{B7832F}
+\definecolor{mbred}{HTML}{A94C4C}
+\definecolor{mbink}{HTML}{233142}
+\definecolor{mbmuted}{HTML}{667085}
+\definecolor{mbcream}{HTML}{F8F2E8}
+
+\begin{document}
+% Presentation mode: __MODE__
+\begin{tikzpicture}[
+  font=\sffamily,
+  >=Stealth,
+  title/.style={font=\sffamily\bfseries\Large, text=mbink},
+  lab/.style={font=\sffamily\scriptsize, text=mbink, align=center},
+  directlabel/.style={font=\sffamily\scriptsize, text=mbink, align=center},
+  explainer/.style={draw=mbteal, rounded corners=2pt, fill=mbcream, line width=0.85pt, align=center, inner sep=4pt},
+  teachingnote/.style={font=\sffamily\scriptsize, text=mbmuted, align=center},
+  researchlabel/.style={font=\sffamily\scriptsize, text=mbink, align=center},
+  axis/.style={mbink, line width=0.75pt},
+  arr/.style={->, draw=mbmuted, line width=0.75pt}
+]
+\node[title, anchor=west] at (0,5.45) {Parallel Trends Diagnostic};
+
+\draw[axis, ->] (0,0) -- (8.8,0);
+\draw[axis, ->] (0,0) -- (0,4.55);
+\node[lab, anchor=west] at (8.25,-0.35) {Time};
+\node[lab, anchor=west] at (0.10,4.68) {Mean outcome};
+
+\draw[mbred, dashed, line width=0.85pt] (4.4,0) -- (4.4,4.25);
+\node[directlabel] at (4.4,-0.35) {$t=0$};
+
+\draw[mbblue, line width=1.25pt] plot[smooth] coordinates {(0.8,1.58) (2.0,1.95) (3.2,2.32) (4.4,2.70) (5.6,3.26) (6.8,3.72) (8.0,4.05)};
+\draw[mbteal, line width=1.25pt] plot[smooth] coordinates {(0.8,0.95) (2.0,1.32) (3.2,1.70) (4.4,2.08) (5.6,2.46) (6.8,2.83) (8.0,3.22)};
+\draw[mbblue, dashed, line width=0.95pt] plot[smooth] coordinates {(4.4,2.70) (5.6,3.08) (6.8,3.46) (8.0,3.84)};
+
+__ANNOTATION_BLOCK__
+
+\node[researchlabel, anchor=west, text=mbblue] at (8.15,4.05) {Treated};
+\node[researchlabel, anchor=west, text=mbteal] at (8.15,3.22) {Control};
+\node[researchlabel, anchor=west, text=mbblue] at (8.15,3.77) {Counterfactual};
+
+__NOTE_BLOCK__
+\end{tikzpicture}
+\end{document}

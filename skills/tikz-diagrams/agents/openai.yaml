@@ -1,0 +1,4 @@
+interface:
+  display_name: "TikZ Diagrams"
+  short_description: "Create, render, verify, and improve TikZ diagrams"
+  default_prompt: "Use $tikz-diagrams to create, render, verify, or improve a TikZ diagram artifact."

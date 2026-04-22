@@ -1,0 +1,36 @@
+{
+  "series_name": "parallel_trends_cleanroom_series",
+  "source": "series_parallel_trends_template.tex",
+  "output_dir": "series_parallel_trends_output",
+  "visual_mode": "teaching",
+  "cumulative": true,
+  "strict_replacements": true,
+  "steps": [
+    {
+      "name": "teaching_explainer",
+      "mode": "teaching",
+      "replacements": {
+        "__MODE__": "teaching",
+        "__ANNOTATION_BLOCK__": "\\node[explainer, text width=2.65cm] (prebox) at (2.25,4.05) {Pre-period slopes should match};\n\\draw[arr] (prebox.south) -- (2.55,1.48);\n\\draw[arr] (prebox.south east) -- (3.10,2.25);\n\\draw[<->, draw=mbgold, line width=1.0pt] (6.8,3.46) -- (6.8,3.72);\n\\node[explainer, text width=1.85cm] (effectbox) at (6.65,4.55) {DiD effect};\n\\draw[arr] (effectbox.south) -- (6.80,3.75);",
+        "__NOTE_BLOCK__": "\\node[teachingnote, text width=8.2cm] at (4.4,-0.82) {Teaching version: explainer boxes name the assumption and the estimand.};"
+      }
+    },
+    {
+      "name": "research_direct_labels",
+      "mode": "research",
+      "replacements": {
+        "Presentation mode: teaching": "Presentation mode: research",
+        "\\node[explainer, text width=2.65cm] (prebox) at (2.25,4.05) {Pre-period slopes should match};\n\\draw[arr] (prebox.south) -- (2.55,1.48);\n\\draw[arr] (prebox.south east) -- (3.10,2.25);\n\\draw[<->, draw=mbgold, line width=1.0pt] (6.8,3.46) -- (6.8,3.72);\n\\node[explainer, text width=1.85cm] (effectbox) at (6.65,4.55) {DiD effect};\n\\draw[arr] (effectbox.south) -- (6.80,3.75);": "\\node[researchlabel, text=mbmuted] at (2.15,2.85) {parallel pre-trends};\n\\draw[<->, draw=mbgold, line width=1.0pt] (6.8,3.46) -- (6.8,3.72);\n\\node[researchlabel, anchor=west, text=mbgold] at (6.95,3.60) {effect};",
+        "\\node[teachingnote, text width=8.2cm] at (4.4,-0.82) {Teaching version: explainer boxes name the assumption and the estimand.};": "\\node[teachingnote, text width=8.2cm] at (4.4,-0.82) {Research version: direct labels preserve the same data geometry with less annotation.};"
+      }
+    },
+    {
+      "name": "compact_no_note",
+      "mode": "compact",
+      "replacements": {
+        "Presentation mode: research": "Presentation mode: compact",
+        "\\node[teachingnote, text width=8.2cm] at (4.4,-0.82) {Research version: direct labels preserve the same data geometry with less annotation.};": ""
+      }
+    }
+  ]
+}

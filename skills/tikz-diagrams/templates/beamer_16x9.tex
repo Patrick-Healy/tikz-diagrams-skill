@@ -1,0 +1,26 @@
+\documentclass[aspectratio=169]{beamer}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,fit,backgrounds}
+\setbeamertemplate{navigation symbols}{}
+
+\begin{document}
+\begin{frame}
+\centering
+% Presentation mode: teaching | research | compact
+% Use explainer boxes for teaching, directlabel/researchlabel for research, and direct labels only for compact figures.
+\begin{tikzpicture}[
+  font=\sffamily,
+  >=Stealth,
+  title/.style={font=\sffamily\bfseries\large},
+  lab/.style={font=\sffamily\scriptsize, align=center},
+  directlabel/.style={font=\sffamily\scriptsize, align=center},
+  explainer/.style={draw, rounded corners=2pt, align=center, inner sep=4pt, minimum height=0.72cm},
+  teachingnote/.style={font=\sffamily\scriptsize, align=center},
+  researchlabel/.style={font=\sffamily\scriptsize, align=center},
+  box/.style={draw, rounded corners=2pt, align=center, inner sep=4pt, minimum height=0.72cm},
+  arr/.style={->, line width=0.8pt}
+]
+% Diagram content here.
+\end{tikzpicture}
+\end{frame}
+\end{document}
