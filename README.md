@@ -133,7 +133,9 @@ Use this path when a static game tree is dense. The animation should reveal the 
 
 | Input context | Output |
 |---|---|
-| <img src="presentation/assets/game_tree_signal_screenshot_context.png" alt="Game-tree screenshot context" width="430"> | <img src="presentation/assets/game_tree_signal_paced_v02.gif" alt="Paced game-tree animation" width="430"> |
+| <img src="presentation/assets/econ_diagrams_signaling_input.png" alt="Signaling game-tree source from Econ-Diagrams" width="430"> | <img src="presentation/assets/game_tree_signal_paced_v02.gif" alt="Paced game-tree animation" width="430"> |
+
+Source input: [`gjoncas/Econ-Diagrams`, `pics/signaling.png`](https://github.com/gjoncas/Econ-Diagrams/blob/master/pics/signaling.png).
 
 **What to notice:** the animation builds Nature, Sender choices, Receiver information sets, Receiver actions, and terminal payoffs in sequence. Dense states need pacing; a viewer needs time to read payoffs and information sets.
 
@@ -141,7 +143,7 @@ Skill decision: `teaching` animation | family: `tree/branch` | logic review: pay
 
 Checks to expect: tree grammar, chance probabilities, information sets, payoff labels, frame sequence, pacing gate, GIF preview.
 
-This row uses the reconstructed static game-tree context image because the original uploaded screenshot is not part of the repository. The workflow is the same: source or static tree context, then paced animation.
+The workflow is: source or static tree context, then paced animation. The source screenshot comes from the public Econ-Diagrams repository.
 
 ### 3. Paper Figure To Animated Research Figure
 
@@ -561,7 +563,7 @@ The showcase uses a mixture of written prompts, local test outputs, paper-figure
 
 - The NBER examples are source-context demonstrations. Cite and link the underlying paper when using them in public teaching or research material.
 - The rough J-curve and AD-AS sketch inputs are classroom-sketch style examples. Replace third-party thumbnails or screenshots with licensed, original, or course-owned images before public promotion.
-- The game-tree row uses a reconstructed context image because the original uploaded screenshot is not stored in this repository.
+- The game-tree row uses the public `pics/signaling.png` input from `gjoncas/Econ-Diagrams`.
 - The generated TikZ outputs, GIF previews, contact sheets, and QA notes are produced by the skill workflow and are included to show what the agent should create and inspect.
 
 ## Sources Checked For Install Guidance
