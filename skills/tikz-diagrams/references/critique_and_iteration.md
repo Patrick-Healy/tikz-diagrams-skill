@@ -19,6 +19,8 @@ Ask these questions:
 - Does every annotation add information not already expressed by nodes, arrows, axes, or direct labels?
 - Would two simpler figures communicate better than one composite figure?
 
+For model-dependent plots, do not let `keep` mean "looks plausible." Run `references/math_logic_checks.md` as a separate gate whenever curves, intersections, brackets, thresholds, estimates, payoffs, or comparative statics carry mathematical meaning.
+
 ## Figure Grammar Budget
 
 A single figure should usually use one primary grammar:

@@ -17,6 +17,7 @@ For visual and domain guidance, read only what is needed:
 - `references/tikz_gotchas.md` when a compile, layout, label, or rendering problem appears.
 - `references/clean_room_handoff_tests.md` when preparing a fresh-session handoff, regression prompt, or iterative figure-series test.
 - `references/critique_and_iteration.md` when doing design critique, researcher-style revisions, noisy/composite figures, figure batteries, or multi-round visual review.
+- `references/math_logic_checks.md` when a figure contains equations, curves, equilibria, estimands, thresholds, game payoffs, geometry-dependent arrows, or model-implied comparative statics.
 
 ## Tool Contract
 
@@ -53,15 +54,16 @@ If a dependency is missing, ask before downloading or installing it. State the p
 2. Choose presentation mode: `teaching`, `research`, or `compact`.
 3. Identify the communication job: show mechanism, workflow, assumptions, feedback, comparison, diagnostic, risk, tradeoff, or evidence summary.
 4. Select a diagram family from `references/diagram_patterns.md` or a domain template from `references/business_economics_patterns.md`.
-5. For animations, first decide what changes over time, why animation is better than a static figure, whether the motion should be discrete or continuous, whether smooth transitions will materially increase render time, and how long viewers need to absorb each frame change; then read `references/animation_workflow.md`.
-6. Start from `templates/standalone.tex` unless a Beamer slide-fit wrapper is required.
-7. Write short labels first. Put longer explanation in external caption text, speaker notes, surrounding slide text, or a QA log rather than inside the rendered image.
-8. Run static checks.
-9. Compile, render, and run rendered visual QA.
-10. Inspect the PNG for overlap, clipping, blank output, cramped text, poor slide fit, and confusing arrow flow.
-11. Run a design critique gate: decide `keep`, `simplify`, `split`, or `reject` based on visual complexity, figure grammar, label economy, and whether the diagram says one clear thing.
-12. Patch the source or generator. Rerun checks and render after substantial layout changes.
-13. For multiple diagrams, create a contact sheet and inspect it before finalizing.
+5. For algebraic, curve, equilibrium, statistical, game-theoretic, or geometry-dependent figures, run the math/diagram logic planning gate before drawing: identify variables, equations or constraints, expected signs, ordering, intersections, invariants, and whether the result is exact or schematic.
+6. For animations, first decide what changes over time, why animation is better than a static figure, whether the motion should be discrete or continuous, whether smooth transitions will materially increase render time, and how long viewers need to absorb each frame change; then read `references/animation_workflow.md`.
+7. Start from `templates/standalone.tex` unless a Beamer slide-fit wrapper is required.
+8. Write short labels first. Put longer explanation in external caption text, speaker notes, surrounding slide text, or a QA log rather than inside the rendered image.
+9. Run static checks.
+10. Compile, render, and run rendered visual QA.
+11. Inspect the PNG for overlap, clipping, blank output, cramped text, poor slide fit, confusing arrow flow, and model-logic problems that visual QA cannot detect.
+12. Run a design critique gate: decide `keep`, `simplify`, `split`, or `reject` based on visual complexity, figure grammar, label economy, and whether the diagram says one clear thing.
+13. Patch the source or generator. Rerun checks and render after substantial layout changes.
+14. For multiple diagrams, create a contact sheet and inspect it before finalizing.
 
 ## Editing Existing Figures
 
@@ -121,6 +123,8 @@ Select by communicative purpose rather than by visual appearance:
 - Short node labels are preferred; keep long prose out of the diagram.
 - Keep caption prose out of the rendered image by default; record suggested caption text in a QA note or response.
 - Arrows must express real semantics: causal, temporal, logical, transformation, diagnostic, or feedback.
+- Visual plausibility is not enough for math, economics, statistics, or geometry diagrams. Curves, intersections, brackets, shaded areas, arrows, labels, and animation states must match the expected algebra, comparative statics, estimand definition, payoff logic, or model constraints.
+- If exact equations, data, or parameter values are unavailable, mark the figure as `schematic` in the QA note and avoid visual claims that look numerically exact.
 - Use stable node dimensions (`text width`, `minimum width`, `minimum height`, `align=center`) when labels can vary.
 - Use a small semantic palette. Do not add decoration that does not clarify the concept.
 - Do not add labels or annotations that merely repeat what a node, branch, arrow, or title already says.
@@ -227,6 +231,7 @@ Complete only when:
 - Rendered visual QA passes, or any warning is documented and manually inspected.
 - Visual inspection finds no severe overlap, clipping, or slide-fit issue.
 - The design critique gate has a documented outcome: `keep`, `simplify`, `split`, or `reject`.
+- For math, curve, model, estimand, threshold, game-theoretic, or geometry-dependent figures, a math/diagram logic review is documented as `exact`, `schematic`, `needs_source`, or `failed`.
 - For animations, the intended frame sequence has been inspected through a frame deck, GIF/MP4 preview, or equivalent contact sheet, not only through the first rendered PNG.
 - For batches, contact sheet exists and has been inspected.
 
