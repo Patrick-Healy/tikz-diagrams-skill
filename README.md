@@ -18,6 +18,24 @@ Repository URL:
 https://github.com/Patrick-Healy/tikz-diagrams-skill
 ```
 
+### Easiest Install: Ask Your Agent
+
+You can copy-paste this into Codex, Claude Code, Cursor, Gemini CLI, Copilot Chat, or another coding agent and ask it to install the skill for you:
+
+```text
+Install this TikZ diagrams skill from GitHub:
+https://github.com/Patrick-Healy/tikz-diagrams-skill
+
+Install only the skill folder at:
+skills/tikz-diagrams/
+
+Put it in the correct global or project skill location for this agent. After installing, confirm that SKILL.md, scripts/, references/, templates/, and tests/ are present. Do not install missing TeX, Python, Poppler, ffmpeg, or ImageMagick dependencies without asking me first and explaining what each dependency is needed for.
+```
+
+This is usually the best route if you are not sure where your agent stores skills. The agent should clone the repository, copy the whole `skills/tikz-diagrams/` folder, and then tell you whether rendering dependencies are already available.
+
+After installation, restart or reload the agent session so it discovers the new skill.
+
 ### Codex
 
 ```text
@@ -40,7 +58,7 @@ git clone https://github.com/Patrick-Healy/tikz-diagrams-skill.git /tmp/tikz-dia
 rsync -a /tmp/tikz-diagrams-skill/skills/tikz-diagrams/ ~/.claude/skills/tikz-diagrams/
 ```
 
-Restart the agent after installing. For rendering workflows, make sure TeX, Poppler, Python packages, `ffmpeg`, and ImageMagick are installed; see [Dependencies](#dependencies).
+For rendering workflows, make sure TeX, Poppler, Python packages, `ffmpeg`, and ImageMagick are installed; see [Dependencies](#dependencies). If they are missing, ask your agent to explain the install source and package list before it downloads anything.
 
 ### First Prompt To Try
 
