@@ -1,23 +1,309 @@
 # TikZ Diagrams Agent Skill
 
-Portable agent skill for creating, rendering, visually checking, iterating, and animating TikZ/PGF diagrams.
+An agent skill for turning written prompts, screenshots, paper figures, and rough sketches into compiled, visually checked TikZ/PGF diagrams and `animate.sty` animations.
 
-The canonical skill lives at:
+The installable skill is the folder:
 
 ```text
-skills/tikz-diagrams/SKILL.md
+skills/tikz-diagrams/
 ```
 
-Install the entire `skills/tikz-diagrams/` folder, not only `SKILL.md`. The folder contains the scripts, references, fixtures, and reusable templates that make the workflow deterministic.
+Install the whole folder, not only `SKILL.md`. The folder contains the scripts, references, fixtures, and reusable templates that make the workflow reliable.
 
-## What It Does
+> Note: Some showcase inputs are screenshots or thumbnail crops from external sources used to demonstrate the workflow. Replace them with licensed/open examples before making a public showcase.
 
-- Creates standalone TikZ diagrams for teaching, research, and compact layouts.
-- Compiles LaTeX to PDF and renders PNG previews.
-- Runs static TikZ safety checks.
-- Runs rendered visual QA for title-band collisions, overlap, clipping, and crowding.
-- Builds contact sheets for batches and iteration rounds.
-- Creates inspectable frame previews, GIFs, and contact sheets for `animate.sty` animations.
+## What This Skill Does
+
+This skill helps an AI agent behave less like a one-off TikZ snippet writer and more like a careful figure assistant.
+
+- It creates standalone TikZ diagrams for teaching, research, and compact layouts.
+- It compiles LaTeX to PDF and renders PNG previews.
+- It runs static TikZ safety checks before compilation.
+- It runs rendered visual QA for title-band collisions, text overlap, clipped labels, and crowding.
+- It builds contact sheets for batches, variants, and critique rounds.
+- It creates inspectable frame decks, GIF previews, and contact sheets for `animate.sty` animations.
+- It records design, math, and animation decisions in QA notes so readers can understand what was checked.
+
+## How To Read The Examples
+
+Each example below shows the same workflow pattern:
+
+1. **Input context**: a written prompt, screenshot, paper figure, or rough drawing.
+2. **Skill decision**: the agent chooses a figure family and presentation mode.
+3. **Rendered output**: static PNG, animated GIF preview, or contact sheet.
+4. **QA interpretation**: checks that explain why the figure is usable.
+
+The point is not that every figure should look like these. The point is that the agent should expose what it is doing: selecting a diagram grammar, preserving source context, running render checks, and distinguishing schematic visual communication from exact mathematical geometry.
+
+## Showcase
+
+### 1. Written Prompt To Static Teaching Diagram
+
+Use this path when there is no visual input. The prompt itself is the input artifact.
+
+| Input | Output |
+|---|---|
+| `Use the tikz-diagrams skill to create a standalone teaching-mode TikZ diagram of parallel trends in difference-in-differences. Compile it, render it, run visual QA, and include a QA note.` | <img src="presentation/assets/did_parallel_trends.png" alt="Parallel trends in difference-in-differences" width="430"> |
+
+**What to notice:** the output focuses on the untreated counterfactual trend and post-treatment comparison, rather than crowding the slide with caption prose.
+
+Checks to expect: `teaching` mode, standalone `.tex`, compiled PDF, rendered PNG, visual QA, QA note.
+
+### 2. Screenshot To Paced Game-Tree Animation
+
+Use this path when a static game tree is dense. The animation should reveal the reading order instead of adding more labels.
+
+| Input context | Output |
+|---|---|
+| <img src="presentation/assets/game_tree_signal_screenshot_context.png" alt="Game-tree screenshot context" width="430"> | <img src="presentation/assets/game_tree_signal_paced_v02.gif" alt="Paced game-tree animation" width="430"> |
+
+**What to notice:** the animation builds Nature, Sender choices, Receiver information sets, Receiver actions, and terminal payoffs in sequence. Dense states need pacing; a viewer needs time to read payoffs and information sets.
+
+Checks to expect: tree grammar, chance probabilities, information sets, payoff labels, frame sequence, pacing gate, GIF preview.
+
+This repository version uses a local screenshot-context image preserving the game-tree geometry used for the test; replace it with the raw uploaded screenshot if publishing a public-facing example.
+
+### 3. Paper Figure To Animated Research Contact Sheet
+
+Use this path when a paper figure is the source of truth and the agent must preserve the model context while animating the mechanism.
+
+| Input paper figure | Output contact sheet |
+|---|---|
+| <img src="presentation/assets/nber_input.png" alt="NBER 34817 Figure 3 screenshot" width="380"> | <img src="presentation/assets/nber_animation_contact.png" alt="Animated phase-diagram contact sheet" width="430"> |
+
+Source context: NBER Working Paper 34817, Figure 3, "International Currency Dominance." The figure is a phase diagram for strategic complementarities in accepting foreign currency: arrows show net incentives, dashed loci show cost thresholds, and colored regions mark monetary regimes.
+
+**What to notice:** the output is a contact sheet, not only a final still. For animations, the frame sequence is part of the figure and must be inspected.
+
+Checks to expect: source context in QA note, figure family chosen, animation frames inspected, rendered visual QA reviewed.
+
+### 4. Paper Screenshot To Animated Corridor Figure
+
+Use this path when a source paper already has the right geometry and the animation should reveal the logic frame by frame.
+
+| Input paper figure | Output |
+|---|---|
+| <img src="presentation/assets/w35085_figure1_input.png" alt="NBER 35085 Figure 1 screenshot" width="430"> | <img src="presentation/assets/belief_corridor_preview_v01.gif" alt="Animated belief corridor trajectory" width="430"> |
+
+Source context: NBER Working Paper 35085, "Le Bureau des Legendes: A Dynamic Theory of Double Agents." Figure 1 shows a belief trajectory inside a corridor of survival, with entry, exit, fixed thresholds, and termination regions.
+
+**What to notice:** the corridor and thresholds stay fixed, the path is revealed smoothly, and the exit marker appears only after the crossing condition is true.
+
+Checks to expect: threshold logic, region inequalities, fixed axes, frame truth, exit marker timing.
+
+### 5. Rough Sketch To J-Curve Animation
+
+Use this path when a rough drawing encodes timing. The useful animation is the delayed response, not extra explanation inside the image.
+
+| Input sketch | Output |
+|---|---|
+| <img src="presentation/assets/j_curve_source_share.png" alt="J-curve sketch input" width="220"> | <img src="presentation/assets/j_curve_animation.gif" alt="Animated J-curve delayed adjustment" width="300"> |
+
+Input context: a current-account J-curve sketch. After a devaluation or policy event, the current account initially deteriorates below baseline before recovering and improving over time.
+
+**What to notice:** the animation reveals the event marker, trough, recovery, and final improvement. Longer interpretation belongs in surrounding text or a QA note.
+
+Checks to expect: delayed-adjustment path, event timing, baseline, trough, recovery, externalized caption.
+
+### 6. Rough Sketch To Exact AD-AS Animation
+
+Use this path when the input is rough but the output should obey explicit curve logic.
+
+| Input sketch | Output |
+|---|---|
+| <img src="presentation/assets/ad_sras_source_share.png" alt="AD-AS multiplier sketch input" width="220"> | <img src="presentation/assets/multiplier_effect_preview_v02.gif" alt="Exact AD-AS multiplier animation" width="430"> |
+
+Input context: an AD-AS multiplier-effect sketch with PL and real GDP axes, SRAS/LRAS, three AD curves, dashed equilibrium guides, and a multiplier label.
+
+**What to notice:** this output uses the math-logic gate. SRAS and AD schedules are declared as equations, intersections are computed, and the output-change bracket attaches to calculated equilibrium output levels.
+
+Checks to expect: `math_logic_review: exact`, declared equations, computed intersections, static safety, PDF compile, GIF preview.
+
+### 7. TeXample Animation Patterns Adapted By Department
+
+Use this path when an agent needs to adapt a known animation idea to a new teaching domain.
+
+| Pattern family | Department outputs |
+|---|---|
+| <img src="presentation/assets/department_animation_contact_sheet_v01.png" alt="Department animation contact sheet" width="430"> | Economics<br><img src="presentation/assets/econ_consumer_surplus_preview_v01.gif" alt="Consumer surplus animation" width="300"><br><br>Econometrics<br><img src="presentation/assets/metrics_convolution_overlap_preview_v01.gif" alt="Convolution overlap animation" width="300"><br><br>Finance<br><img src="presentation/assets/finance_margin_buffer_preview_v01.gif" alt="Margin buffer animation" width="300"><br><br>Marketing<br><img src="presentation/assets/marketing_cohort_migration_preview_v01.gif" alt="Cohort migration animation" width="300"><br><br>Operations<br><img src="presentation/assets/ops_eoq_cost_sweep_preview_v01.gif" alt="EOQ cost sweep animation" width="300"> |
+
+Source patterns: TeXample animated definite integral, lower/upper Riemann sums, convolution, Towers of Hanoi, projectile, and Andler optimal lot-size.
+
+**What to notice:** each department gets a reason to animate:
+
+- Economics: area accumulation for consumer surplus.
+- Econometrics: moving overlap for convolution of shocks.
+- Finance: trajectory against a maintenance margin line.
+- Marketing: cohort migration across states.
+- Operations: EOQ tradeoff sweep across order quantity.
+
+Checks to expect: pattern adaptation, department fit, `animate.sty` PDFs, GIF previews, contact-sheet review.
+
+## Core Workflow
+
+The skill asks the agent to move through a figure workflow rather than jumping straight to code:
+
+1. Identify the target medium: paper, Beamer slide, handout, template library, or exploratory sketch.
+2. Choose presentation mode: `teaching`, `research`, or `compact`.
+3. Identify the communication job: mechanism, workflow, assumptions, comparison, diagnostic, risk, tradeoff, or evidence summary.
+4. Select a diagram family or domain template.
+5. For model-dependent figures, run the math/diagram logic planning gate before drawing.
+6. For animations, decide what changes over time, whether motion should be discrete or continuous, and whether smoothness is worth the render cost.
+7. Write short labels first and keep caption-style prose outside the rendered image by default.
+8. Run static checks.
+9. Compile, render, and run rendered visual QA.
+10. Inspect the PNG, GIF, or contact sheet.
+11. Record the design outcome: `keep`, `simplify`, `split`, or `reject`.
+
+## Quality Gates
+
+### Static Safety
+
+The static safety checker catches common TikZ hazards before compilation:
+
+```bash
+python3 "$SKILL_DIR/scripts/check_tikz_safety.py" path/to/diagram.tex
+```
+
+It is intentionally conservative. For macro-based figures, point it at the file containing the actual `tikzpicture` definitions as well as the wrapper source.
+
+### Rendered Visual QA
+
+Rendered visual QA checks the PDF/PNG result for visual failures that the TeX compiler cannot see:
+
+```bash
+python3 "$SKILL_DIR/scripts/compile_render.py" path/to/diagram.tex --visual-check --visual-mode teaching
+```
+
+It looks for title-band collisions, text overlap, clipped labels, near-edge labels, and crowded annotations. It does not replace manual inspection.
+
+### Math And Diagram Logic
+
+Visual plausibility is not enough for math, economics, statistics, or geometry diagrams. The skill includes a math/diagram logic gate for curves, equilibria, thresholds, payoffs, estimands, and comparative statics.
+
+Record one of:
+
+```text
+math_logic_review: exact | schematic | needs_source | failed
+```
+
+Use `exact` only when plotted geometry is generated from stated equations, coordinates, data, or source values. Use `schematic` for qualitative teaching sketches.
+
+### Animation QA
+
+For animations, the PDF alone is not enough. A successful `animate.sty` PDF can still fail as a teaching artifact if the frames are too fast, labels appear before they are true, or the final state is crowded.
+
+Expected animation artifacts:
+
+- interactive `.tex` using `animate.sty`
+- compiled interactive `.pdf`
+- first-frame `.png`
+- frame-preview `.tex` or frame deck
+- GIF or MP4 preview
+- contact sheet of key frames
+- QA note with source pattern, pacing, checks, and repairs
+
+## Install For AI Tools
+
+Repository URL:
+
+```text
+https://github.com/Patrick-Healy/tikz-diagrams-skill
+```
+
+### Codex
+
+Codex supports skills as folders with `SKILL.md`. Install from the GitHub directory URL with `$skill-installer`:
+
+```text
+$skill-installer install https://github.com/Patrick-Healy/tikz-diagrams-skill/tree/main/skills/tikz-diagrams
+```
+
+Manual install:
+
+```bash
+mkdir -p ~/.codex/skills
+git clone https://github.com/Patrick-Healy/tikz-diagrams-skill.git /tmp/tikz-diagrams-skill
+rsync -a /tmp/tikz-diagrams-skill/skills/tikz-diagrams/ ~/.codex/skills/tikz-diagrams/
+```
+
+Restart Codex after installing.
+
+### Claude Code
+
+Claude Code skills live in `~/.claude/skills/<skill-name>/SKILL.md` for personal installs or `.claude/skills/<skill-name>/SKILL.md` for project installs.
+
+```bash
+mkdir -p ~/.claude/skills
+git clone https://github.com/Patrick-Healy/tikz-diagrams-skill.git /tmp/tikz-diagrams-skill
+rsync -a /tmp/tikz-diagrams-skill/skills/tikz-diagrams/ ~/.claude/skills/tikz-diagrams/
+```
+
+Development symlink:
+
+```bash
+ln -s "$PWD/skills/tikz-diagrams" ~/.claude/skills/tikz-diagrams
+```
+
+### Gemini CLI
+
+Gemini CLI supports extensions with `gemini-extension.json` and a context file. This repository includes both.
+
+```bash
+gemini extensions install https://github.com/Patrick-Healy/tikz-diagrams-skill
+```
+
+Local development:
+
+```bash
+git clone https://github.com/Patrick-Healy/tikz-diagrams-skill
+cd tikz-diagrams-skill
+gemini extensions link .
+```
+
+### Cursor
+
+Cursor supports project rules in `.cursor/rules` and root-level `AGENTS.md` instructions.
+
+```bash
+git clone https://github.com/Patrick-Healy/tikz-diagrams-skill.git /tmp/tikz-diagrams-skill
+cp /tmp/tikz-diagrams-skill/AGENTS.md /path/to/project/AGENTS.md
+mkdir -p /path/to/project/.cursor/rules
+cp /tmp/tikz-diagrams-skill/.cursor/rules/tikz-diagrams.mdc /path/to/project/.cursor/rules/
+```
+
+Then ask Cursor to read `skills/tikz-diagrams/SKILL.md` from this repository or copy the skill folder into the target project.
+
+### VS Code And GitHub Copilot
+
+VS Code and GitHub Copilot support repository custom instructions in `.github/copilot-instructions.md` and path-scoped `.github/instructions/*.instructions.md` files.
+
+```bash
+git clone https://github.com/Patrick-Healy/tikz-diagrams-skill.git /tmp/tikz-diagrams-skill
+mkdir -p /path/to/project/.github/instructions
+cp /tmp/tikz-diagrams-skill/.github/copilot-instructions.md /path/to/project/.github/copilot-instructions.md
+cp /tmp/tikz-diagrams-skill/.github/instructions/tikz-diagrams.instructions.md /path/to/project/.github/instructions/
+```
+
+### Visual Studio With Copilot
+
+Use the same GitHub Copilot repository instructions:
+
+```bash
+mkdir -p /path/to/project/.github/instructions
+cp .github/copilot-instructions.md /path/to/project/.github/copilot-instructions.md
+cp .github/instructions/tikz-diagrams.instructions.md /path/to/project/.github/instructions/
+```
+
+### Antigravity
+
+Antigravity guidance is less standardized publicly than Codex, Claude Code, Gemini CLI, Cursor, and Copilot. The most portable approach is to use `AGENTS.md` and/or `GEMINI.md` at the project root, then tell the agent to read the skill folder.
+
+```bash
+git clone https://github.com/Patrick-Healy/tikz-diagrams-skill.git /tmp/tikz-diagrams-skill
+cp /tmp/tikz-diagrams-skill/AGENTS.md /path/to/project/AGENTS.md
+cp /tmp/tikz-diagrams-skill/GEMINI.md /path/to/project/GEMINI.md
+```
 
 ## Dependencies
 
@@ -30,7 +316,7 @@ The skill can be read by any agent as plain Markdown. Rendering workflows need l
 - `ffmpeg` for GIF/MP4 animation previews
 - ImageMagick with the `magick` command for animation contact sheets
 
-Agents should ask before installing missing dependencies. The permission request should name the package manager/source, list packages, and explain what check or render step needs them.
+Agents should ask before installing missing dependencies. The permission request should name the package manager or source, list packages, and explain what check or render step needs them.
 
 Common macOS setup:
 
@@ -60,118 +346,28 @@ python -m pip install Pillow PyMuPDF
 
 Poppler on Windows is easiest through MSYS2, Chocolatey, or a trusted Poppler build. Verify `pdftoppm` is on `PATH`.
 
-## Install for AI Tools
+## Quick Test
 
-Replace `REPO_URL` with the final GitHub URL.
-
-### Codex
-
-Codex supports skills as folders with `SKILL.md`. The OpenAI skills catalog documents installing from a GitHub directory URL with `$skill-installer`.
-
-```text
-$skill-installer install REPO_URL/tree/main/skills/tikz-diagrams
-```
-
-Manual install:
+After cloning:
 
 ```bash
-mkdir -p ~/.codex/skills
-git clone REPO_URL /tmp/tikz-diagrams-skill
-rsync -a /tmp/tikz-diagrams-skill/skills/tikz-diagrams/ ~/.codex/skills/tikz-diagrams/
+export SKILL_DIR="$PWD/skills/tikz-diagrams"
+python3 "$SKILL_DIR/scripts/check_tikz_safety.py" "$SKILL_DIR/templates/standalone.tex"
 ```
 
-Restart Codex after installing.
-
-After installation, the user's global skill should contain:
-
-```text
-~/.codex/skills/tikz-diagrams/
-├── SKILL.md
-├── references/
-├── scripts/
-├── templates/
-└── tests/
-```
-
-### Claude Code
-
-Claude Code skills live in `~/.claude/skills/<skill-name>/SKILL.md` for personal installs or `.claude/skills/<skill-name>/SKILL.md` for project installs.
+For a real diagram:
 
 ```bash
-mkdir -p ~/.claude/skills
-git clone REPO_URL /tmp/tikz-diagrams-skill
-rsync -a /tmp/tikz-diagrams-skill/skills/tikz-diagrams/ ~/.claude/skills/tikz-diagrams/
+python3 "$SKILL_DIR/scripts/compile_render.py" path/to/diagram.tex --visual-check --visual-mode teaching
 ```
 
-Development symlink:
+For an animation frame deck:
 
 ```bash
-ln -s "$PWD/skills/tikz-diagrams" ~/.claude/skills/tikz-diagrams
+python3 "$SKILL_DIR/scripts/render_animation_preview.py" path/to/frames.pdf --fps 8 --key-frames 1,10,20
 ```
 
-### Gemini CLI
-
-Gemini CLI supports extensions with `gemini-extension.json` and a context file. This repository includes both.
-
-```bash
-gemini extensions install REPO_URL
-```
-
-Local development:
-
-```bash
-git clone REPO_URL
-cd tikz-diagrams-skill
-gemini extensions link .
-```
-
-### Cursor
-
-Cursor supports project rules in `.cursor/rules` and simple root-level `AGENTS.md` instructions.
-
-For a project:
-
-```bash
-git clone REPO_URL /tmp/tikz-diagrams-skill
-cp /tmp/tikz-diagrams-skill/AGENTS.md /path/to/project/AGENTS.md
-mkdir -p /path/to/project/.cursor/rules
-cp /tmp/tikz-diagrams-skill/.cursor/rules/tikz-diagrams.mdc /path/to/project/.cursor/rules/
-```
-
-Then ask Cursor to read `skills/tikz-diagrams/SKILL.md` from this repository or copy the skill folder into the target project.
-
-### VS Code and GitHub Copilot
-
-VS Code and GitHub Copilot support repository custom instructions in `.github/copilot-instructions.md` and path-scoped `.github/instructions/*.instructions.md` files.
-
-```bash
-git clone REPO_URL /tmp/tikz-diagrams-skill
-mkdir -p /path/to/project/.github/instructions
-cp /tmp/tikz-diagrams-skill/.github/copilot-instructions.md /path/to/project/.github/copilot-instructions.md
-cp /tmp/tikz-diagrams-skill/.github/instructions/tikz-diagrams.instructions.md /path/to/project/.github/instructions/
-```
-
-### Visual Studio with Copilot
-
-Use the same GitHub Copilot repository instructions:
-
-```bash
-mkdir -p /path/to/project/.github/instructions
-cp .github/copilot-instructions.md /path/to/project/.github/copilot-instructions.md
-cp .github/instructions/tikz-diagrams.instructions.md /path/to/project/.github/instructions/
-```
-
-### Antigravity
-
-Antigravity guidance is less standardized publicly than Codex, Claude Code, Gemini CLI, Cursor, and Copilot. The most portable approach is to use `AGENTS.md` and/or `GEMINI.md` at the project root, then tell the agent to read the skill folder.
-
-```bash
-git clone REPO_URL /tmp/tikz-diagrams-skill
-cp /tmp/tikz-diagrams-skill/AGENTS.md /path/to/project/AGENTS.md
-cp /tmp/tikz-diagrams-skill/GEMINI.md /path/to/project/GEMINI.md
-```
-
-## Sources Checked for Install Guidance
+## Sources Checked For Install Guidance
 
 - Claude Code skills: https://code.claude.com/docs/en/skills
 - OpenAI skills catalog: https://github.com/openai/skills
@@ -179,16 +375,3 @@ cp /tmp/tikz-diagrams-skill/GEMINI.md /path/to/project/GEMINI.md
 - VS Code custom instructions: https://code.visualstudio.com/docs/copilot/customization/custom-instructions
 - GitHub Copilot repository instructions: https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/add-custom-instructions/add-repository-instructions
 - Cursor rules: https://docs.cursor.com/context/rules-for-ai
-
-## Quick Test
-
-```bash
-export SKILL_DIR="$PWD/skills/tikz-diagrams"
-python3 "$SKILL_DIR/scripts/check_tikz_safety.py" "$SKILL_DIR/templates/standalone.tex"
-```
-
-For a real diagram, create a standalone `.tex`, then run:
-
-```bash
-python3 "$SKILL_DIR/scripts/compile_render.py" path/to/diagram.tex --visual-check --visual-mode teaching
-```
