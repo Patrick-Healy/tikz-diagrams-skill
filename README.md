@@ -241,18 +241,18 @@ Use this path when a rough drawing encodes timing. The useful animation is the d
 |---|---|
 | <img src="presentation/assets/j_curve_source_share.png" alt="J-curve sketch input" width="220"> | <img src="presentation/assets/j_curve_animation.gif" alt="Animated J-curve delayed adjustment" width="300"> |
 
-Input context: a TikTok-style current-account J-curve sketch. After a devaluation or policy event, the current account initially deteriorates below baseline before recovering and improving over time.
+Input context: a TikTok-style current-account J-curve sketch. After depreciation, the current account can deteriorate immediately because import values rise before quantities adjust. Over time, export and import quantities respond; the long-run path improves if the elasticity condition is strong enough.
 
-**What to notice:** the animation reveals the event marker, trough, recovery, and final improvement. Longer interpretation belongs in surrounding text or a QA note.
+**What to notice:** the animation now puts the depreciation event before the deterioration, then reveals the trough and quantity-adjustment recovery. Longer interpretation belongs in surrounding text or a QA note.
 
 Skill decision: `teaching` animation | family: `delayed-adjustment path / J-curve` | math review: `schematic` | outputs: hand-drawn-style GIF preview.
 
-Checks to expect: delayed-adjustment path, event timing, baseline, trough, recovery, externalized caption.
+Checks to expect: delayed-adjustment path, event timing, immediate price-effect deterioration, trough after the event, gradual recovery, externalized caption.
 
 Prompt pattern:
 
 ```text
-Use the tikz-diagrams skill to turn this hand-drawn J-curve sketch into a hand-drawn-style animated TikZ figure. Preserve the rough classroom-board feel, but make the axes, event marker, trough, recovery path, and final improvement readable. Render a GIF preview and include a QA note.
+Use the tikz-diagrams skill to turn this hand-drawn J-curve sketch into a hand-drawn-style animated TikZ figure. Preserve the rough classroom-board feel, but make the axes, depreciation event, immediate current-account deterioration, trough, and quantity-adjustment recovery path readable. Render a GIF preview and include a QA note.
 ```
 
 ### 6. Rough Sketch To Exact AD-AS Animation
