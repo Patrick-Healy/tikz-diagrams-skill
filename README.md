@@ -119,7 +119,7 @@ Use this path when there is no visual input. The prompt itself is the input arti
 
 | Input | Output |
 |---|---|
-| `Use the tikz-diagrams skill to create a standalone teaching-mode TikZ diagram of parallel trends in difference-in-differences. Compile it, render it, run visual QA, and include a QA note.` | <img src="presentation/assets/did_parallel_trends.png" alt="Parallel trends in difference-in-differences" width="430"> |
+| `Use the tikz-diagrams skill to create a standalone teaching-mode TikZ diagram of parallel trends in difference-in-differences. Compile it, render it, run visual QA, and include a QA note.` | <img src="presentation/assets/did_parallel_trends.png" alt="Parallel trends in difference-in-differences" width="620"> |
 
 **What to notice:** the output focuses on the untreated counterfactual trend and post-treatment comparison, rather than crowding the slide with caption prose.
 
