@@ -65,7 +65,7 @@ For rendering workflows, make sure TeX, Poppler, Python packages, `ffmpeg`, and 
 After installing, start a new agent session and ask it to use the skill:
 
 ```text
-Use the tikz-diagrams skill to create a standalone teaching-mode TikZ diagram of parallel trends in difference-in-differences. Compile it, render it, run visual QA, and include a QA note.
+Use the tikz-diagrams skill to create a standalone teaching-mode TikZ diagram of parallel trends in difference-in-differences. Compile it, render it, run visual Quality Assurance (QA), and include a QA note.
 ```
 
 ### Local Smoke Test
