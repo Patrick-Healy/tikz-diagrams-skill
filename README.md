@@ -77,6 +77,56 @@ export SKILL_DIR="$PWD/skills/tikz-diagrams"
 python3 "$SKILL_DIR/scripts/check_tikz_safety.py" "$SKILL_DIR/templates/standalone.tex"
 ```
 
+## How To Use It Day To Day
+
+Once the skill is installed, the simplest pattern is:
+
+1. Start a new agent session.
+2. Say `Use the tikz-diagrams skill`.
+3. Describe the figure, audience, and output format.
+4. Ask for compile, render, visual Quality Assurance (QA), and a short QA note.
+5. Review the PNG, GIF, or contact sheet.
+6. Ask for precise changes, or ask the agent to save the successful figure as a reusable example.
+
+### Codex: Use And Improve The Skill
+
+Use this when you want Codex to make a figure:
+
+```text
+Use the tikz-diagrams skill to create a [teaching/research/compact] TikZ figure for [TOPIC].
+Audience: [COURSE, PAPER, SEMINAR, OR WORKSHOP].
+Output folder: [PATH].
+Compile it, render it, run visual Quality Assurance (QA), inspect the image, and write a short QA note.
+```
+
+Use this when a result is good enough to become a reusable example:
+
+```text
+Use the tikz-diagrams skill and update this skill repository with the successful example we just made.
+Add the prompt, source context, final output image or GIF, and QA note to the README showcase or an appropriate examples folder.
+Keep the installable skill folder lean: do not add bulky showcase documentation inside skills/tikz-diagrams unless it is a reusable template, reference, fixture, or script.
+Remove private paths and personal information before committing.
+```
+
+### Claude Code: Use And Improve The Skill
+
+Use this when you want Claude Code to make a figure:
+
+```text
+Use the tikz-diagrams skill from my installed skills folder.
+Create a standalone [teaching/research/compact] TikZ figure or animate.sty animation for [TOPIC].
+Compile, render, run visual Quality Assurance (QA), inspect the output, and include a short QA note.
+```
+
+Use this when you want Claude Code to add a good result back to the repository:
+
+```text
+Update the tikz-diagrams skill repository with this completed example.
+Add the final prompt, source context, output image or GIF, and QA note in the public documentation or example assets.
+Keep reusable templates and regression fixtures inside skills/tikz-diagrams only when they help future agents.
+Before committing, check that there are no private paths, no personal data, and no missing image links.
+```
+
 ## Prompt Menu
 
 Use these short forms once the skill is installed. Full copy-paste prompts are in [Prompt Cookbook](#prompt-cookbook).
