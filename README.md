@@ -63,17 +63,17 @@ Checks to expect: tree grammar, chance probabilities, information sets, payoff l
 
 This repository version uses a local screenshot-context image preserving the game-tree geometry used for the test; replace it with the raw uploaded screenshot if publishing a public-facing example.
 
-### 3. Paper Figure To Animated Research Contact Sheet
+### 3. Paper Figure To Animated Research Figure
 
 Use this path when a paper figure is the source of truth and the agent must preserve the model context while animating the mechanism.
 
-| Input paper figure | Output contact sheet |
+| Input paper figure | Animated output and contact sheet |
 |---|---|
-| <img src="presentation/assets/nber_input.png" alt="NBER 34817 Figure 3 screenshot" width="380"> | <img src="presentation/assets/nber_animation_contact.png" alt="Animated phase-diagram contact sheet" width="430"> |
+| <img src="presentation/assets/nber_input.png" alt="NBER 34817 Figure 3 screenshot" width="380"> | <img src="presentation/assets/nber_figure3_phase_preview_v01.gif" alt="Animated phase-diagram preview" width="380"><br><br><img src="presentation/assets/nber_animation_contact.png" alt="Animated phase-diagram contact sheet" width="430"> |
 
 Source context: NBER Working Paper 34817, Figure 3, "International Currency Dominance." The figure is a phase diagram for strategic complementarities in accepting foreign currency: arrows show net incentives, dashed loci show cost thresholds, and colored regions mark monetary regimes.
 
-**What to notice:** the output is a contact sheet, not only a final still. For animations, the frame sequence is part of the figure and must be inspected.
+**What to notice:** the output includes both a GIF preview and a contact sheet. For animations, playback and the frame sequence are part of the figure and must be inspected.
 
 Checks to expect: source context in QA note, figure family chosen, animation frames inspected, rendered visual QA reviewed.
 
