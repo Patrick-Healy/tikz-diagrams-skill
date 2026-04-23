@@ -10,6 +10,22 @@ skills/tikz-diagrams/
 
 Install the whole folder, not only `SKILL.md`. The folder contains the scripts, references, fixtures, and reusable templates that make the workflow reliable.
 
+## Text Prompt To Static Diagram: Teaching vs Research
+
+The same text prompt can produce different versions depending on mode. The underlying plot geometry stays the same; teaching mode adds explanatory information for learners, while research mode keeps the figure clean for a paper, seminar, or appendix.
+
+Prompt:
+
+```text
+Use the tikz-diagrams skill to create a standalone TikZ diagram of parallel trends in difference-in-differences. Compile it, render it, run visual Quality Assurance (QA), and include a QA note.
+```
+
+| Teaching mode | Research mode |
+|---|---|
+| <img src="presentation/assets/did_parallel_trends_teaching_mode.png" alt="Teaching-mode parallel trends diagram" width="460"> | <img src="presentation/assets/did_parallel_trends_research_mode.png" alt="Research-mode parallel trends diagram" width="460"> |
+
+Use teaching mode when the image itself needs a short cue or reminder. Use research mode when the surrounding paper, slide text, or speaker notes will carry the interpretation.
+
 ## Quickstart: Install And Use
 
 Repository URL:
