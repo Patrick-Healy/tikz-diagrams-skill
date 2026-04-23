@@ -30,11 +30,21 @@ def png_nonblank(path: Path) -> bool:
     return extrema != (255, 255)
 
 
-def run_visual_check(pdf: Path, mode: str, report: Path | None) -> int:
+def run_visual_check(
+    pdf: Path,
+    mode: str,
+    report: Path | None,
+    text_plot_overlap: bool = False,
+    plot_label_regex: str | None = None,
+) -> int:
     script = Path(__file__).resolve().parent / "check_tikz_visual.py"
     cmd = [sys.executable, str(script), str(pdf), "--mode", mode]
     if report is not None:
         cmd.extend(["--report", str(report)])
+    if text_plot_overlap:
+        cmd.append("--text-plot-overlap")
+    if plot_label_regex:
+        cmd.extend(["--plot-label-regex", plot_label_regex])
     proc = subprocess.run(cmd, cwd=pdf.parent, text=True, capture_output=True)
     if proc.stdout:
         print(proc.stdout, end="")
@@ -61,6 +71,15 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--visual-check", action="store_true", help="Run rendered visual QA after PNG creation")
     parser.add_argument("--visual-mode", choices=["teaching", "research", "compact"], default="teaching")
     parser.add_argument("--visual-report", help="Optional JSON report path; defaults to <stem>-visual-qa.json when visual checking")
+    parser.add_argument(
+        "--text-plot-overlap",
+        action="store_true",
+        help="With --visual-check, run targeted text-box-vs-plot-geometry check for effect/estimate/callout labels",
+    )
+    parser.add_argument(
+        "--plot-label-regex",
+        help="Regex for labels to include in --text-plot-overlap",
+    )
     args = parser.parse_args(argv[1:])
 
     tex = Path(args.tex).resolve()
@@ -87,7 +106,7 @@ def main(argv: list[str]) -> int:
 
     if args.visual_check:
         report = Path(args.visual_report).resolve() if args.visual_report else cwd / f"{stem}-visual-qa.json"
-        rc = run_visual_check(pdf, args.visual_mode, report)
+        rc = run_visual_check(pdf, args.visual_mode, report, args.text_plot_overlap, args.plot_label_regex)
         if rc != 0:
             return rc
 

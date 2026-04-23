@@ -27,6 +27,7 @@ When producing variants, keep the same geometry and semantics where possible so 
 - Use stable node dimensions when generating variants.
 - Leave visible whitespace between nodes, arrows, labels, and callouts.
 - Reserve a protected title band. No callout, event marker, legend, arrow, or plot label may touch or enter it.
+- Keep effect labels, estimate labels, coefficient labels, and other direct labels out of plotted strokes. If a label is inside the plotting region, verify that its rendered text box does not cover curves, brackets, axes, shaded-region boundaries, or the key comparison.
 - Do not let labels determine the entire geometry unless the diagram is tiny.
 - Prefer separate small multiples over a single overloaded diagram.
 - Split figures that combine incompatible grammars, such as a DAG plus coefficient plot, unless the user explicitly wants a composite and the layout remains readable.
@@ -64,4 +65,5 @@ When producing variants, keep the same geometry and semantics where possible so 
 - Inspect contact sheets for repeated layout problems.
 - Patch shared templates or generators when the same issue appears repeatedly.
 - During critique rounds, use versioned PNG and contact-sheet filenames so the inspected image cannot be confused with a stale cached render.
+- When showing updates to a user, prefer the versioned local file just rendered. Overwritten PNG/GIF filenames and GitHub README images may be cached by browsers or chat clients.
 - Record a complexity outcome for each figure: `keep`, `simplify`, `split`, or `reject`.

@@ -32,6 +32,7 @@ For visual and domain guidance, read only what is needed:
 - Save task outputs under a user/workspace output folder, not inside the skill directory.
 - Final artifacts should normally include `.tex`, `.pdf`, and `.png`. For batches, include contact sheets and a short QA log when useful.
 - During critique or iterative visual review, save versioned PNGs and contact sheets instead of overwriting inspected images; stale viewer caches can otherwise show the wrong render.
+- When showing an updated image in chat, prefer the freshly rendered versioned local file. Do not rely on a GitHub README image, browser tab, or overwritten canonical filename as proof that the user is seeing the latest render.
 
 Resolve bundled scripts, templates, and references relative to the directory containing this `SKILL.md`. If the host agent exposes a skill-directory variable such as `${CLAUDE_SKILL_DIR}`, use it; otherwise set `SKILL_DIR=/path/to/tikz-diagrams` in examples or commands.
 
@@ -60,10 +61,11 @@ If a dependency is missing, ask before downloading or installing it. State the p
 8. Write short labels first. Put longer explanation in external caption text, speaker notes, surrounding slide text, or a QA log rather than inside the rendered image.
 9. Run static checks.
 10. Compile, render, and run rendered visual QA.
-11. Inspect the PNG for overlap, clipping, blank output, cramped text, poor slide fit, confusing arrow flow, and model-logic problems that visual QA cannot detect.
-12. Run a design critique gate: decide `keep`, `simplify`, `split`, or `reject` based on visual complexity, figure grammar, label economy, and whether the diagram says one clear thing.
-13. Patch the source or generator. Rerun checks and render after substantial layout changes.
-14. For multiple diagrams, create a contact sheet and inspect it before finalizing.
+11. For direct labels, effect labels, estimate labels, callouts, or math notation inside a plotted region, run the targeted text-over-plot gate with `--text-plot-overlap` or inspect equivalent PDF text boxes against rendered plot pixels.
+12. Inspect the PNG for overlap, clipping, blank output, cramped text, poor slide fit, confusing arrow flow, and model-logic problems that visual QA cannot detect.
+13. Run a design critique gate: decide `keep`, `simplify`, `split`, or `reject` based on visual complexity, figure grammar, label economy, and whether the diagram says one clear thing.
+14. Patch the source or generator. Rerun checks and render after substantial layout changes.
+15. For multiple diagrams, create a contact sheet and inspect it before finalizing.
 
 ## Editing Existing Figures
 
@@ -94,6 +96,7 @@ For researcher-driven iteration, keep controls explicit instead of burying them 
 - Offer paired variants when useful: a `teaching` version with explainer boxes and a `research` version with direct labels and external captions.
 - Preserve the same data geometry across variants unless the user asks for a conceptual redesign.
 - Use visual QA reports to target edits: fix `title_band_collision`, `text_overlap`, `near_edge`, and `text_crowding` issues one at a time.
+- For fine-grained label collisions that ordinary visual QA can miss, especially effect labels on plots, use `--text-plot-overlap`. This maps PDF text boxes onto the rendered image and checks whether targeted labels cover plotted strokes.
 - For batches or repeated variants, create a contact sheet with `--show-qa` and only inspect the failed or warning panels in detail.
 - For critique rounds, distinguish a repair from a simplification or redesign. If the user says a figure is noisy, too complex, or should be redone, default to structural simplification or splitting, not a tiny coordinate tweak.
 
@@ -132,6 +135,7 @@ Select by communicative purpose rather than by visual appearance:
 - One diagram should usually have one main teaching job.
 - For delayed-adjustment paths, keep the time axis, intervention marker, baseline, and final direction easy to compare. Use short phase labels; put causal mechanisms, estimates, and caveats outside the rendered image or in a paired figure.
 - Treat semantic correctness as part of visual QA: labels, highlights, arrows, and annotations must remain true in the frames, variants, or panels where they appear.
+- Treat direct-label placement as part of visual QA: an effect, estimate, coefficient, or callout label must not sit on top of a curve, bracket, axis, shaded region boundary, or key comparison. If in doubt, rerender with `--text-plot-overlap` and move the label to whitespace or add a clear backing box.
 - For animations, every moving element must carry meaning. Do not animate for decoration; animate accumulation, transition, parameter sweep, threshold crossing, trajectory, sorting, recursion, or convergence.
 - For animations, choose motion form deliberately: categorical additions usually need discrete build frames; accumulation, traversal, phase movement, and parameter sweeps usually need smooth intermediate frames.
 - For animations, ask before rendering smooth transitions when smoothness materially increases render time or artifact size and the user has not already requested smooth motion. Offer a fast stepped preview versus a slower smooth render.
@@ -162,10 +166,22 @@ Compile, render, and run visual QA:
 python3 "$SKILL_DIR/scripts/compile_render.py" path/to/diagram.tex --visual-check --visual-mode teaching
 ```
 
+Compile, render, and run targeted text-over-plot QA for labels such as effects, estimates, coefficients, or jumps:
+
+```bash
+python3 "$SKILL_DIR/scripts/compile_render.py" path/to/diagram.tex --visual-check --visual-mode research --text-plot-overlap
+```
+
 Visual QA on an existing PDF:
 
 ```bash
 python3 "$SKILL_DIR/scripts/check_tikz_visual.py" path/to/diagram.pdf --mode teaching --report path/to/diagram-visual-qa.json
+```
+
+Target the fine-grained gate at custom label text when needed:
+
+```bash
+python3 "$SKILL_DIR/scripts/check_tikz_visual.py" path/to/diagram.pdf --mode research --text-plot-overlap --plot-label-regex 'tau|DiD|effect|estimate'
 ```
 
 Batch contact sheet:
@@ -220,6 +236,8 @@ Do not pre-generate "iterations" without inspecting the previous result.
 
 During critique iterations, use versioned outputs such as `figure_v01.png`, `figure_v02.png`, and `contact_sheet_v02.png`. Only copy the accepted version to the final canonical filename after inspection.
 
+When reporting back to the user, show or link the exact freshly rendered versioned local image that was inspected. If a canonical filename was overwritten, mention the versioned source as well; browser, chat, and GitHub image caches can otherwise display an older image.
+
 ## Completion Criteria
 
 Complete only when:
@@ -229,6 +247,7 @@ Complete only when:
 - PDF compiles.
 - PNG renders and is nonblank.
 - Rendered visual QA passes, or any warning is documented and manually inspected.
+- Fine-grained text-over-plot QA has passed or been manually inspected when labels are placed inside plotted regions.
 - Visual inspection finds no severe overlap, clipping, or slide-fit issue.
 - The design critique gate has a documented outcome: `keep`, `simplify`, `split`, or `reject`.
 - For math, curve, model, estimand, threshold, game-theoretic, or geometry-dependent figures, a math/diagram logic review is documented as `exact`, `schematic`, `needs_source`, or `failed`.

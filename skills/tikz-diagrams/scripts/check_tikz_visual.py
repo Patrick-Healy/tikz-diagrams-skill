@@ -56,6 +56,7 @@ class Box:
     y0: float
     x1: float
     y1: float
+    colors: list[int] | None = None
 
     @property
     def width(self) -> float:
@@ -78,7 +79,7 @@ class Box:
         return (self.y0 + self.y1) / 2.0
 
     def inflate(self, margin: float) -> "Box":
-        return Box(self.text, self.x0 - margin, self.y0 - margin, self.x1 + margin, self.y1 + margin)
+        return Box(self.text, self.x0 - margin, self.y0 - margin, self.x1 + margin, self.y1 + margin, self.colors)
 
 
 @dataclass
@@ -136,10 +137,103 @@ def text_boxes_from_pdf(pdf: Path) -> tuple[float, float, list[Box]]:
             y0 = min(float(s["bbox"][1]) for s in spans)
             x1 = max(float(s["bbox"][2]) for s in spans)
             y1 = max(float(s["bbox"][3]) for s in spans)
-            boxes.append(Box(text=text, x0=x0, y0=y0, x1=x1, y1=y1))
+            colors = sorted({int(s.get("color", 0)) for s in spans})
+            boxes.append(Box(text=text, x0=x0, y0=y0, x1=x1, y1=y1, colors=colors))
 
     boxes.sort(key=lambda b: (b.y0, b.x0))
     return float(page_rect.width), float(page_rect.height), boxes
+
+
+def int_to_rgb(color: int) -> tuple[int, int, int]:
+    return ((color >> 16) & 255, (color >> 8) & 255, color & 255)
+
+
+DEFAULT_PLOT_LABEL_RE = re.compile(
+    r"(τ|tau|DiD|\bATT\b|\bATE\b|effect|estimate|coef|coefficient|gap|jump|bracket)",
+    re.IGNORECASE,
+)
+
+
+def text_box_plot_pixels(
+    pdf: Path,
+    boxes: list[Box],
+    dpi: int = 180,
+    label_re: re.Pattern[str] = DEFAULT_PLOT_LABEL_RE,
+) -> list[tuple[Box, int, int]]:
+    """Find non-text, non-background pixels inside text boxes.
+
+    This is a deliberately conservative fine-grained gate for direct labels on
+    plots. It catches labels placed over curve/bracket/axis strokes, a failure
+    mode that PDF text-box overlap checks miss because the colliding geometry is
+    not text. The heuristic ignores pixels matching the text's own span color and
+    near-white/light-gray antialiasing from the label background.
+    """
+    try:
+        import fitz  # PyMuPDF
+    except Exception as exc:  # pragma: no cover - environment dependent
+        raise SystemExit(f"ERROR: PyMuPDF is required for visual checks: {exc}") from exc
+    try:
+        from PIL import Image
+    except Exception as exc:  # pragma: no cover - environment dependent
+        raise SystemExit(f"ERROR: Pillow is required for text/plot overlap checks: {exc}") from exc
+
+    doc = fitz.open(pdf)
+    page = doc[0]
+    zoom = dpi / 72.0
+    pix = page.get_pixmap(matrix=fitz.Matrix(zoom, zoom), alpha=False)
+    image = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+
+    try:
+        import numpy as np
+    except Exception as exc:  # pragma: no cover - environment dependent
+        raise SystemExit(f"ERROR: numpy is required for text/plot overlap checks: {exc}") from exc
+
+    results: list[tuple[Box, int, int]] = []
+    for box in boxes:
+        if len(box.text.strip()) <= 1:
+            continue
+        if not label_re.search(box.text):
+            continue
+        pad = 1.5
+        x0 = max(0, int((box.x0 - pad) * zoom))
+        y0 = max(0, int((box.y0 - pad) * zoom))
+        x1 = min(image.width, int((box.x1 + pad) * zoom))
+        y1 = min(image.height, int((box.y1 + pad) * zoom))
+        if x1 <= x0 or y1 <= y0:
+            continue
+
+        arr = np.array(image.crop((x0, y0, x1, y1))).astype(np.int16)
+        red = arr[:, :, 0]
+        green = arr[:, :, 1]
+        blue = arr[:, :, 2]
+
+        near_white = (red > 215) & (green > 215) & (blue > 215)
+        light_gray = (abs(red - green) < 10) & (abs(green - blue) < 10) & (red > 155)
+        allowed = near_white | light_gray
+
+        for color in box.colors or []:
+            tr, tg, tb = int_to_rgb(color)
+            # Allow antialiased pixels close to the text color.
+            dist = abs(red - tr) + abs(green - tg) + abs(blue - tb)
+            allowed |= dist < 95
+
+        # For the fine-grained gate, focus on plotted strokes from common
+        # semantic palettes. Do not count red pixels by default because many
+        # effect labels are themselves red; red-on-red bracket checks are better
+        # handled by moving the label outside the bracket or giving it a
+        # background.
+        colored_or_dark = (
+            ((blue > 90) & (blue > red + 18) & (blue > green))
+            | ((green > 70) & (green > red + 15) & (blue > 40) & (blue < 200))
+            | ((red < 85) & (green < 95) & (blue < 115))
+        )
+        bad = colored_or_dark & ~allowed
+        bad_count = int(bad.sum())
+        total = int(arr.shape[0] * arr.shape[1])
+        if bad_count >= 8 and bad_count / max(total, 1) > 0.002:
+            results.append((box, bad_count, total))
+
+    return results
 
 
 def likely_title(boxes: list[Box], page_width: float, page_height: float) -> Box | None:
@@ -158,7 +252,12 @@ def likely_title(boxes: list[Box], page_width: float, page_height: float) -> Box
     return max(top_candidates, key=lambda b: (b.height, b.width))
 
 
-def check_visual(pdf: Path, mode: str) -> dict:
+def check_visual(
+    pdf: Path,
+    mode: str,
+    text_plot_overlap: bool = False,
+    plot_label_regex: str | None = None,
+) -> dict:
     limits = MODE_LIMITS[mode]
     page_width, page_height, boxes = text_boxes_from_pdf(pdf)
     issues: list[Issue] = []
@@ -240,9 +339,23 @@ def check_visual(pdf: Path, mode: str) -> dict:
             )
         )
 
+    if text_plot_overlap:
+        label_re = re.compile(plot_label_regex, re.IGNORECASE) if plot_label_regex else DEFAULT_PLOT_LABEL_RE
+        for box, bad_count, total in text_box_plot_pixels(pdf, boxes, label_re=label_re):
+            issues.append(
+                Issue(
+                    severity="error",
+                    code="text_plot_overlap",
+                    message=f"Targeted text box appears to cover plotted geometry: {box.text!r} ({bad_count}/{total} plot-colored pixels inside text box)",
+                    boxes=[box.text],
+                )
+            )
+
     report = {
         "pdf": str(pdf),
         "mode": mode,
+        "text_plot_overlap_check": text_plot_overlap,
+        "plot_label_regex": plot_label_regex or DEFAULT_PLOT_LABEL_RE.pattern if text_plot_overlap else None,
         "page": {"width": page_width, "height": page_height},
         "text_box_count": len(boxes),
         "title": asdict(title) if title else None,
@@ -265,6 +378,15 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--mode", choices=sorted(MODE_LIMITS), default="teaching")
     parser.add_argument("--report", help="Optional JSON report path")
     parser.add_argument("--warnings-as-errors", action="store_true")
+    parser.add_argument(
+        "--text-plot-overlap",
+        action="store_true",
+        help="Run targeted text-box-vs-rendered-geometry check for effect/estimate/callout labels",
+    )
+    parser.add_argument(
+        "--plot-label-regex",
+        help="Regex for labels to include in --text-plot-overlap; defaults to effect/estimate terms",
+    )
     args = parser.parse_args(argv[1:])
 
     pdf = Path(args.pdf).resolve()
@@ -272,7 +394,7 @@ def main(argv: list[str]) -> int:
         print(f"ERROR: PDF not found: {pdf}", file=sys.stderr)
         return 2
 
-    report = check_visual(pdf, args.mode)
+    report = check_visual(pdf, args.mode, args.text_plot_overlap, args.plot_label_regex)
     print_report(report)
 
     if args.report:

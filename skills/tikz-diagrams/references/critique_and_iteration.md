@@ -16,6 +16,7 @@ Ask these questions:
 - Is there one primary figure grammar?
 - Can the main message be understood after a brief glance?
 - Are labels explaining the plot, or compensating for an overloaded plot?
+- Do direct labels, effect labels, or math labels sit on top of plotted lines, brackets, axes, or shaded boundaries?
 - Does every annotation add information not already expressed by nodes, arrows, axes, or direct labels?
 - Would two simpler figures communicate better than one composite figure?
 
@@ -87,6 +88,27 @@ Viewer caches can show stale images when PNGs are overwritten in place. During c
 2. Render versioned contact sheets such as `contact_sheet_v01.png` and `contact_sheet_v02.png`.
 3. Link or inspect the versioned file that was actually reviewed.
 4. Copy the accepted image to the canonical final filename only after the review is complete.
+
+When a user says an image still looks stale or unchanged, assume cache confusion is possible until disproven. Show the freshly rendered local versioned artifact, compare file modification times or checksums if needed, and avoid using a GitHub README-rendered image as the only evidence of the current state.
+
+## Fine-Grained Text-On-Geometry Gate
+
+Ordinary rendered visual QA catches text-text overlap, title-band collisions, and edge clipping. It can miss a label sitting on a plotted line because the line is vector geometry, not text.
+
+Use the targeted text-over-plot gate when a figure has effect labels, coefficient labels, estimate labels, math notation, or callouts inside a plotted region:
+
+```bash
+python3 "$SKILL_DIR/scripts/check_tikz_visual.py" path/to/diagram.pdf --mode research --text-plot-overlap
+```
+
+What worked best in testing:
+
+- Use PDF text extraction for exact text boxes; OCR text recognition is too noisy for math labels such as `\hat\tau_{DiD}`.
+- Map those text boxes to rendered PNG pixels.
+- Inspect the pixels inside each targeted label box for plot-colored strokes that are not the label's own text color or a light backing box.
+- Use a targeted regex for labels such as `tau`, `DiD`, `effect`, `estimate`, `coef`, `gap`, or `jump`; do not run the gate indiscriminately on every axis tick or direct label.
+
+If the gate fails, move the label to whitespace, shorten it, add a visible backing box, or connect it to the bracket/curve with a small leader. Rerender and rerun the same gate.
 
 ## Repair, Simplify, Redesign
 

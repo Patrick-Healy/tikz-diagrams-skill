@@ -22,6 +22,7 @@ Inspect rendered images and animation frames for logic as well as layout:
 
 - Do labels attach to the correct curve, region, point, or branch?
 - Do intersections, brackets, guide lines, arrows, and shaded areas measure the stated object?
+- Do labels for effects, estimates, coefficients, or gaps sit clear of the object they label, rather than covering the plotted line or bracket being measured?
 - Are shifts separated from movements along a curve?
 - Are pre/post, treated/control, threshold/region, sender/receiver, and before/after labels in the right states?
 - Does a final effect bracket correspond to the intended difference rather than convenient spacing?
@@ -36,7 +37,7 @@ Inspect rendered images and animation frames for logic as well as layout:
 - **Threshold / corridor trajectories**: Region labels must match inequalities. Failure, exit, or crossing markers should appear only after the path crosses the relevant boundary.
 - **Distributions and parameter sweeps**: Density curves should remain normalized when treated as exact. Mean, variance, skew, or tail changes must match the parameter movement shown.
 - **Game trees**: Chance probabilities should sum to one at each information set. Information sets must connect nodes that are indistinguishable to the player. Payoff tuples, player order, and branch labels must be consistent across frames.
-- **DiD / event studies / RDD**: Axes, treatment timing, cutoff, pre-period patterns, coefficient timing, and estimand labels must correspond to the identification story.
+- **DiD / event studies / RDD**: Axes, treatment timing, cutoff, pre-period patterns, coefficient timing, and estimand labels must correspond to the identification story. For DiD sketches, if geometry is exact, the treated-control pre-period gap should match the post-treatment counterfactual gap; the effect bracket should connect the observed treated outcome to the counterfactual outcome; the estimand label should not cover either plotted series.
 - **Mediation / DAGs / causal graphs**: Directed edges should match the causal claim. Do not combine paths, estimates, and diagnostics into one figure unless the shared layout makes the logic clearer.
 
 ## QA Note Fields
