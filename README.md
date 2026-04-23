@@ -26,6 +26,8 @@ Use the tikz-diagrams skill to create a standalone TikZ diagram of parallel tren
 
 Use teaching mode when the image itself needs a short cue or reminder. Use research mode when the surrounding paper, slide text, or speaker notes will carry the interpretation.
 
+Gate check: both versions pass rendered visual QA, use identical curve geometry, and preserve the DiD counterfactual logic: the treated-control gap is constant before treatment and at the post-treatment counterfactual.
+
 ## Quickstart: Install And Use
 
 Repository URL:
