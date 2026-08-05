@@ -32,6 +32,7 @@ outputs/
 !presentation/assets/**/
 !presentation/assets/**/*.png
 !presentation/assets/**/*.gif
+!traffic/*.png
 
 # Local environment and secrets
 .env

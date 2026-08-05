@@ -1,0 +1,45 @@
+name: Collect traffic stats
+
+on:
+  schedule:
+    # Daily at 06:00 UTC. GitHub's traffic API only keeps ~14 days, so we
+    # snapshot every day and accumulate history in traffic/*.csv.
+    - cron: "0 6 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install matplotlib
+        run: pip install matplotlib
+
+      - name: Collect traffic
+        env:
+          # Traffic endpoints require push access. The default GITHUB_TOKEN
+          # usually works for the repo it runs in; if you hit a 403, create a
+          # classic PAT with the `repo` scope and add it as the TRAFFIC_TOKEN
+          # secret — it will be preferred automatically.
+          GH_TOKEN: ${{ secrets.TRAFFIC_TOKEN || secrets.GITHUB_TOKEN }}
+        run: python traffic/collect.py
+
+      - name: Commit updated data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add traffic/views.csv traffic/clones.csv traffic/cumulative.png
+          if git diff --cached --quiet; then
+            echo "No traffic changes to commit."
+          else
+            git commit -m "chore: update traffic stats [skip ci]"
+            git push
+          fi
