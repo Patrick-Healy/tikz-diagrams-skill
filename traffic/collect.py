@@ -20,11 +20,17 @@ REPO = os.environ["GITHUB_REPOSITORY"]
 
 
 def api(path):
-    out = subprocess.run(
+    r = subprocess.run(
         ["gh", "api", f"repos/{REPO}/traffic/{path}"],
-        capture_output=True, text=True, check=True,
-    ).stdout
-    return json.loads(out)
+        capture_output=True, text=True,
+    )
+    if r.returncode != 0:
+        raise SystemExit(
+            f"gh api traffic/{path} failed (exit {r.returncode}).\n{r.stderr}\n"
+            "Traffic endpoints require a token with push access — set a classic "
+            "PAT (repo scope) as the TRAFFIC_TOKEN secret."
+        )
+    return json.loads(r.stdout)
 
 
 def merge(csv_path, rows):
