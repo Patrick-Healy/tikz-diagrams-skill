@@ -36,7 +36,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add traffic/views.csv traffic/clones.csv traffic/cumulative.png
+          git add traffic/views.csv traffic/clones.csv traffic/cumulative.png traffic/TRAFFIC.md
           if git diff --cached --quiet; then
             echo "No traffic changes to commit."
           else
