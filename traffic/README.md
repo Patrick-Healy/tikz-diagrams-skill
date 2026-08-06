@@ -11,7 +11,3 @@ Run manually from the **Actions** tab → *Collect traffic stats* → *Run workf
 or locally: `GITHUB_REPOSITORY=Patrick-Healy/tikz-diagrams-skill python traffic/collect.py`
 
 ![cumulative traffic](cumulative.png)
-
-> Note: traffic endpoints require push access. If the workflow 403s on the
-> default `GITHUB_TOKEN`, add a classic PAT (`repo` scope) as the `TRAFFIC_TOKEN`
-> repository secret — it's preferred automatically.
