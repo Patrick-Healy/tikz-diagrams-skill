@@ -61,35 +61,85 @@ def snapshot(kind, key):
     return merge(HERE / f"{kind}.csv", rows)
 
 
-def load_cumulative(data):
+def series(data):
+    """Return (dates, counts, uniques, cumulative_counts). Uniques are per-day
+    and are NOT cumulated — GitHub dedupes them per window, so summing across
+    days would double-count returning visitors."""
     dates = sorted(data)
+    counts = [data[d][0] for d in dates]
+    uniques = [data[d][1] for d in dates]
     cum, running = [], 0
-    for d in dates:
-        running += data[d][0]
+    for c in counts:
+        running += c
         cum.append(running)
-    return dates, cum
+    return dates, counts, uniques, cum
+
+
+def write_table(vd, vcount, vuni, vcum, cd, ccount, cuni, ccum):
+    lines = [
+        "# Traffic — by date",
+        "",
+        "Cumulative columns are running sums of daily counts. Unique columns are",
+        "**per-day** and intentionally not summed (GitHub dedupes uniques within a",
+        "window, so cross-day sums would double-count returning visitors).",
+        "",
+        "| Date | Views | Cum. Views | Unique Viewers | Clones | Cum. Clones | Unique Cloners |",
+        "|------|------:|-----------:|---------------:|-------:|------------:|---------------:|",
+    ]
+    vmap = {d: (vcount[i], vcum[i], vuni[i]) for i, d in enumerate(vd)}
+    cmap = {d: (ccount[i], ccum[i], cuni[i]) for i, d in enumerate(cd)}
+    for d in sorted(set(vd) | set(cd)):
+        v = vmap.get(d, (0, 0, 0))
+        c = cmap.get(d, (0, 0, 0))
+        lines.append(
+            f"| {d} | {v[0]} | {v[1]} | {v[2]} | {c[0]} | {c[1]} | {c[2]} |"
+        )
+    lines += [
+        "",
+        f"**Totals:** {vcum[-1] if vcum else 0} cumulative views · "
+        f"{ccum[-1] if ccum else 0} cumulative clones",
+        "",
+        "![cumulative traffic](cumulative.png)",
+        "",
+    ]
+    (HERE / "TRAFFIC.md").write_text("\n".join(lines))
+    print("Wrote TRAFFIC.md")
 
 
 def main():
     views = snapshot("views", "views")
     clones = snapshot("clones", "clones")
 
-    vd, vc = load_cumulative(views)
-    cd, cc = load_cumulative(clones)
+    vd, vcount, vuni, vcum = series(views)
+    cd, ccount, cuni, ccum = series(clones)
+
+    write_table(vd, vcount, vuni, vcum, cd, ccount, cuni, ccum)
 
     try:
         import matplotlib
         matplotlib.use("Agg")
         import matplotlib.pyplot as plt
 
-        fig, ax = plt.subplots(figsize=(10, 5))
-        ax.plot(vd, vc, marker="o", label="Cumulative views", color="#1f77b4")
-        ax.plot(cd, cc, marker="s", label="Cumulative clones", color="#d62728")
-        ax.set_title(f"{REPO} — cumulative traffic")
-        ax.set_xlabel("Date")
-        ax.set_ylabel("Cumulative count")
-        ax.grid(True, alpha=0.3)
-        ax.legend()
+        fig, (ax1, ax2) = plt.subplots(
+            2, 1, figsize=(10, 8), sharex=True,
+            gridspec_kw={"height_ratios": [2, 1]},
+        )
+        # Top: cumulative counts
+        ax1.plot(vd, vcum, marker="o", label="Cumulative views", color="#1f77b4")
+        ax1.plot(cd, ccum, marker="s", label="Cumulative clones", color="#d62728")
+        ax1.set_ylabel("Cumulative count")
+        ax1.set_title(f"{REPO} — traffic")
+        ax1.grid(True, alpha=0.3)
+        ax1.legend()
+        # Bottom: daily uniques
+        ax2.plot(vd, vuni, marker="o", label="Unique viewers/day", color="#1f77b4",
+                 linestyle="--", alpha=0.8)
+        ax2.plot(cd, cuni, marker="s", label="Unique cloners/day", color="#d62728",
+                 linestyle="--", alpha=0.8)
+        ax2.set_ylabel("Unique / day")
+        ax2.set_xlabel("Date")
+        ax2.grid(True, alpha=0.3)
+        ax2.legend()
         fig.autofmt_xdate()
         fig.tight_layout()
         fig.savefig(HERE / "cumulative.png", dpi=120)
@@ -97,8 +147,8 @@ def main():
     except ImportError:
         print("matplotlib unavailable; skipping plot")
 
-    print(f"views: {len(views)} days, {vc[-1] if vc else 0} cumulative")
-    print(f"clones: {len(clones)} days, {cc[-1] if cc else 0} cumulative")
+    print(f"views: {len(views)} days, {vcum[-1] if vcum else 0} cumulative")
+    print(f"clones: {len(clones)} days, {ccum[-1] if ccum else 0} cumulative")
 
 
 if __name__ == "__main__":
