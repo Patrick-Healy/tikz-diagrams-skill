@@ -21,7 +21,8 @@ window, so cross-day sums would double-count returning visitors).
 | 2026-08-03 | 22 | 254 | 8 | 9 | 58 | 7 |
 | 2026-08-04 | 94 | 348 | 35 | 3 | 61 | 3 |
 | 2026-08-05 | 116 | 464 | 38 | 17 | 78 | 12 |
+| 2026-08-06 | 26 | 490 | 11 | 22 | 100 | 14 |
 
-**Totals:** 464 cumulative views · 78 cumulative clones
+**Totals:** 490 cumulative views · 100 cumulative clones
 
 ![cumulative traffic](cumulative.png)
